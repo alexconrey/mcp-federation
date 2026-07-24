@@ -282,10 +282,7 @@ impl LeafClient {
             })
     }
 
-    pub async fn read_resource(
-        &self,
-        uri: &str,
-    ) -> Result<serde_json::Value, FederationError> {
+    pub async fn read_resource(&self, uri: &str) -> Result<serde_json::Value, FederationError> {
         let request = serde_json::json!({
             "jsonrpc": "2.0",
             "id": self.next_request_id(),
@@ -373,10 +370,13 @@ impl LeafClient {
             req = req.header("Mcp-Session-Id", session_id.as_str());
         }
 
-        let response = req.send().await.map_err(|e| FederationError::LeafUnreachable {
-            alias: self.alias.clone(),
-            source: e,
-        })?;
+        let response = req
+            .send()
+            .await
+            .map_err(|e| FederationError::LeafUnreachable {
+                alias: self.alias.clone(),
+                source: e,
+            })?;
 
         let status = response.status();
         if !status.is_success() {
@@ -493,10 +493,7 @@ impl LeafClient {
     }
 
     pub async fn health_check(&self) -> Result<(), FederationError> {
-        let url = self
-            .url
-            .trim_end_matches("/mcp")
-            .trim_end_matches('/');
+        let url = self.url.trim_end_matches("/mcp").trim_end_matches('/');
         let health_url = format!("{url}/healthz");
 
         self.http
@@ -541,9 +538,7 @@ impl LeafClient {
                 if !retry_status.is_success() {
                     return Err(FederationError::LeafError {
                         alias: self.alias.clone(),
-                        message: format!(
-                            "leaf returned HTTP {retry_status} after session re-init"
-                        ),
+                        message: format!("leaf returned HTTP {retry_status} after session re-init"),
                     });
                 }
                 return Ok(retry_value);
@@ -586,10 +581,13 @@ impl LeafClient {
             }
         }
 
-        let response = req.send().await.map_err(|e| FederationError::LeafUnreachable {
-            alias: self.alias.clone(),
-            source: e,
-        })?;
+        let response = req
+            .send()
+            .await
+            .map_err(|e| FederationError::LeafUnreachable {
+                alias: self.alias.clone(),
+                source: e,
+            })?;
 
         let status = response.status();
 
@@ -611,14 +609,13 @@ impl LeafClient {
             .unwrap_or("")
             .to_string();
 
-        let bytes =
-            response
-                .bytes()
-                .await
-                .map_err(|e| FederationError::LeafUnreachable {
-                    alias: self.alias.clone(),
-                    source: e,
-                })?;
+        let bytes = response
+            .bytes()
+            .await
+            .map_err(|e| FederationError::LeafUnreachable {
+                alias: self.alias.clone(),
+                source: e,
+            })?;
 
         let value = if content_type.starts_with("text/event-stream") {
             // Streamable HTTP leaf answered inline with an SSE-framed JSON-RPC

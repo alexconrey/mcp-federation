@@ -3,9 +3,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use base64::Engine;
-use jsonwebtoken::{
-    decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation,
-};
+use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
@@ -53,9 +51,7 @@ impl SessionManager {
             Some(b64) => match base64::engine::general_purpose::STANDARD.decode(b64.as_bytes()) {
                 Ok(bytes) if !bytes.is_empty() => bytes,
                 Ok(_) => {
-                    tracing::warn!(
-                        "session_secret decoded to empty bytes; generating random key"
-                    );
+                    tracing::warn!("session_secret decoded to empty bytes; generating random key");
                     random_key()
                 }
                 Err(e) => {

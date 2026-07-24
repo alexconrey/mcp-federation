@@ -178,11 +178,7 @@ impl Registry {
 
     /// Insert (or replace) a leaf under the given alias. Returns the previous
     /// entry if one existed.
-    pub async fn add_leaf(
-        &self,
-        alias: String,
-        entry: Arc<LeafEntry>,
-    ) -> Option<Arc<LeafEntry>> {
+    pub async fn add_leaf(&self, alias: String, entry: Arc<LeafEntry>) -> Option<Arc<LeafEntry>> {
         self.leaves.write().await.insert(alias, entry)
     }
 
@@ -274,11 +270,7 @@ impl Registry {
             .await
             .ok_or_else(|| format!("unknown leaf: {alias}"))?;
 
-        let tools = leaf
-            .client
-            .list_tools()
-            .await
-            .map_err(|e| e.to_string())?;
+        let tools = leaf.client.list_tools().await.map_err(|e| e.to_string())?;
 
         let count = tools.len();
         *leaf.cached_tools.write().await = tools;
@@ -452,10 +444,7 @@ mod tests {
             "new",
             "http://new:8080/mcp",
         )));
-        assert!(registry
-            .add_leaf("new".to_string(), entry)
-            .await
-            .is_none());
+        assert!(registry.add_leaf("new".to_string(), entry).await.is_none());
         assert!(registry.get_leaf("new").await.is_some());
 
         let replacement = Arc::new(LeafEntry::new(make_server_config(

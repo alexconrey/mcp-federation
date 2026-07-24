@@ -13,11 +13,11 @@ use utoipa_swagger_ui::SwaggerUi;
 
 use mcp_federation::aggregator::Aggregator;
 use mcp_federation::api::{self, ApiState};
+use mcp_federation::config::TransportType;
 use mcp_federation::config::{ClientConfig, FederationConfig};
 use mcp_federation::crd_discovery;
 use mcp_federation::dns_discovery;
 use mcp_federation::health::start_health_monitor;
-use mcp_federation::config::TransportType;
 use mcp_federation::mcp::{JsonRpcError, JsonRpcRequest, JsonRpcResponse};
 use mcp_federation::notifications::NotificationBroker;
 use mcp_federation::rate_limit::RateLimiter;
@@ -148,8 +148,7 @@ async fn main() {
         .or_else(|| config.federation.auth_token_file.clone());
 
     let server_count = config.servers.len();
-    let tool_cache_ttl =
-        std::time::Duration::from_secs(config.federation.tool_cache_ttl_seconds);
+    let tool_cache_ttl = std::time::Duration::from_secs(config.federation.tool_cache_ttl_seconds);
     let pool_config = config.federation.connection_pool.clone();
     let session_ttl_seconds = config.federation.session_ttl_seconds;
     let session_secret = config.federation.session_secret.clone();
@@ -166,8 +165,11 @@ async fn main() {
 
     // --list-tools: initialize, dump aggregated tools, exit.
     if cli.list_tools {
-        match tokio::time::timeout(std::time::Duration::from_secs(10), registry.initialize_all())
-            .await
+        match tokio::time::timeout(
+            std::time::Duration::from_secs(10),
+            registry.initialize_all(),
+        )
+        .await
         {
             Ok(()) => {}
             Err(_) => eprintln!("warning: leaf initialization timed out after 10s"),
@@ -198,10 +200,8 @@ async fn main() {
     crd_discovery::start_crd_watcher(crd_discovery_config, registry.clone(), pool_config).await;
 
     let sessions = Arc::new(SessionManager::new(session_ttl_seconds, session_secret));
-    let _prune_handle = session::spawn_prune_task(
-        sessions.clone(),
-        std::time::Duration::from_secs(60),
-    );
+    let _prune_handle =
+        session::spawn_prune_task(sessions.clone(), std::time::Duration::from_secs(60));
 
     let notifications = Arc::new(NotificationBroker::new());
 
@@ -327,14 +327,14 @@ fn spawn_config_reloader(config_path: PathBuf, registry: Arc<Registry>) {
     use std::collections::HashSet;
 
     tokio::spawn(async move {
-        let mut sighup =
-            match tokio::signal::unix::signal(tokio::signal::unix::SignalKind::hangup()) {
-                Ok(s) => s,
-                Err(e) => {
-                    tracing::error!(error = %e, "failed to install SIGHUP handler");
-                    return;
-                }
-            };
+        let mut sighup = match tokio::signal::unix::signal(tokio::signal::unix::SignalKind::hangup())
+        {
+            Ok(s) => s,
+            Err(e) => {
+                tracing::error!(error = %e, "failed to install SIGHUP handler");
+                return;
+            }
+        };
 
         loop {
             if sighup.recv().await.is_none() {
@@ -467,9 +467,7 @@ async fn auth_middleware(
         // handlers still see a RequestContext.
         None => {
             if !skip {
-                request
-                    .extensions_mut()
-                    .insert(RequestContext::anonymous());
+                request.extensions_mut().insert(RequestContext::anonymous());
             }
         }
         // Server enforces auth — resolve the presented bearer token against
@@ -557,7 +555,13 @@ async fn run_http(
         .install_recorder()
         .expect("Failed to install Prometheus recorder");
 
-    let app = build_router(state, auth_token, auth_token_file, clients, prometheus_handle);
+    let app = build_router(
+        state,
+        auth_token,
+        auth_token_file,
+        clients,
+        prometheus_handle,
+    );
 
     let listener = tokio::net::TcpListener::bind(listen)
         .await
@@ -588,7 +592,13 @@ async fn run_https(
         .install_recorder()
         .expect("Failed to install Prometheus recorder");
 
-    let app = build_router(state, auth_token, auth_token_file, clients, prometheus_handle);
+    let app = build_router(
+        state,
+        auth_token,
+        auth_token_file,
+        clients,
+        prometheus_handle,
+    );
 
     let config = axum_server::tls_rustls::RustlsConfig::from_pem_file(cert_path, key_path)
         .await
@@ -668,7 +678,9 @@ async fn print_tools_table(aggregator: &Aggregator, registry: &Registry) {
     for (alias, name, desc) in &rows {
         println!(
             "{:<alias_w$}  {:<name_w$}  {}",
-            alias, name, desc,
+            alias,
+            name,
+            desc,
             alias_w = alias_w,
             name_w = name_w,
         );

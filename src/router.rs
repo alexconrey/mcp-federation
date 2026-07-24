@@ -179,11 +179,9 @@ impl Router {
                 let alias = arguments
                     .get("alias")
                     .and_then(|a| a.as_str())
-                    .ok_or_else(|| {
-                        FederationError::LeafError {
-                            alias: "federation".to_string(),
-                            message: "missing required argument: alias".to_string(),
-                        }
+                    .ok_or_else(|| FederationError::LeafError {
+                        alias: "federation".to_string(),
+                        message: "missing required argument: alias".to_string(),
                     })?;
 
                 let leaf = self
@@ -219,8 +217,7 @@ impl Router {
             }
 
             "refresh" => {
-                let results = if let Some(alias) = arguments.get("alias").and_then(|a| a.as_str())
-                {
+                let results = if let Some(alias) = arguments.get("alias").and_then(|a| a.as_str()) {
                     let result = self.registry.refresh_tools(alias).await;
                     vec![(alias.to_string(), result)]
                 } else {

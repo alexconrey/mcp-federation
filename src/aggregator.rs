@@ -184,26 +184,19 @@ fn namespace_tool(alias: &str, tool: &serde_json::Value) -> Option<serde_json::V
         .unwrap_or("");
 
     let mut namespaced = tool.clone();
-    namespaced["name"] =
-        serde_json::Value::String(format!("{alias}{NAMESPACE_SEPARATOR}{name}"));
-    namespaced["description"] =
-        serde_json::Value::String(format!("[{alias}] {description}"));
+    namespaced["name"] = serde_json::Value::String(format!("{alias}{NAMESPACE_SEPARATOR}{name}"));
+    namespaced["description"] = serde_json::Value::String(format!("[{alias}] {description}"));
 
     Some(namespaced)
 }
 
 fn namespace_resource(alias: &str, resource: &serde_json::Value) -> Option<serde_json::Value> {
     let uri = resource.get("uri")?.as_str()?;
-    let name = resource
-        .get("name")
-        .and_then(|n| n.as_str())
-        .unwrap_or("");
+    let name = resource.get("name").and_then(|n| n.as_str()).unwrap_or("");
 
     let mut namespaced = resource.clone();
-    namespaced["uri"] =
-        serde_json::Value::String(format!("{alias}{NAMESPACE_SEPARATOR}{uri}"));
-    namespaced["name"] =
-        serde_json::Value::String(format!("[{alias}] {name}"));
+    namespaced["uri"] = serde_json::Value::String(format!("{alias}{NAMESPACE_SEPARATOR}{uri}"));
+    namespaced["name"] = serde_json::Value::String(format!("[{alias}] {name}"));
 
     Some(namespaced)
 }
@@ -216,10 +209,8 @@ fn namespace_prompt(alias: &str, prompt: &serde_json::Value) -> Option<serde_jso
         .unwrap_or("");
 
     let mut namespaced = prompt.clone();
-    namespaced["name"] =
-        serde_json::Value::String(format!("{alias}{NAMESPACE_SEPARATOR}{name}"));
-    namespaced["description"] =
-        serde_json::Value::String(format!("[{alias}] {description}"));
+    namespaced["name"] = serde_json::Value::String(format!("{alias}{NAMESPACE_SEPARATOR}{name}"));
+    namespaced["description"] = serde_json::Value::String(format!("[{alias}] {description}"));
 
     Some(namespaced)
 }
@@ -404,10 +395,7 @@ mod tests {
             "prod",
             "http://prod:8080/mcp",
             vec![],
-            vec![make_resource(
-                "k8s://default/pods/my-pod",
-                "Kubernetes Pod",
-            )],
+            vec![make_resource("k8s://default/pods/my-pod", "Kubernetes Pod")],
             vec![],
         )])
         .await;

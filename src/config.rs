@@ -331,7 +331,10 @@ pub fn interpolate_env_vars(content: &str) -> String {
 impl FederationConfig {
     pub fn from_file(path: &Path) -> Result<Self, FederationError> {
         let content = std::fs::read_to_string(path).map_err(|e| {
-            FederationError::Config(format!("failed to read config file {}: {e}", path.display()))
+            FederationError::Config(format!(
+                "failed to read config file {}: {e}",
+                path.display()
+            ))
         })?;
         Self::from_str(&content)
     }
@@ -644,10 +647,7 @@ servers:
     url: "http://leaf:8080/mcp"
 "#;
         let config = FederationConfig::from_str(yaml).unwrap();
-        assert_eq!(
-            config.federation.auth_token,
-            Some("sekret-abc".to_string())
-        );
+        assert_eq!(config.federation.auth_token, Some("sekret-abc".to_string()));
         std::env::remove_var("MCP_FED_TEST_TOKEN_A");
     }
 

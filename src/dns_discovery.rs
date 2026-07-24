@@ -69,10 +69,7 @@ pub fn spawn_dns_discovery(config: DnsDiscoveryConfig, registry: Arc<Registry>) 
     });
 }
 
-async fn poll_once(
-    config: &DnsDiscoveryConfig,
-    registry: &Arc<Registry>,
-) -> Result<(), String> {
+async fn poll_once(config: &DnsDiscoveryConfig, registry: &Arc<Registry>) -> Result<(), String> {
     let records = query_srv(&config.srv_name).await?;
     reconcile(registry, config, &records).await;
     Ok(())
@@ -103,10 +100,7 @@ async fn query_srv(name: &str) -> Result<Vec<SrvRecord>, String> {
 }
 
 fn parse_srv_output(stdout: &str) -> Vec<SrvRecord> {
-    stdout
-        .lines()
-        .filter_map(parse_srv_line)
-        .collect()
+    stdout.lines().filter_map(parse_srv_line).collect()
 }
 
 fn parse_srv_line(line: &str) -> Option<SrvRecord> {
@@ -122,11 +116,7 @@ fn parse_srv_line(line: &str) -> Option<SrvRecord> {
     Some(SrvRecord { port, target })
 }
 
-async fn reconcile(
-    registry: &Arc<Registry>,
-    config: &DnsDiscoveryConfig,
-    records: &[SrvRecord],
-) {
+async fn reconcile(registry: &Arc<Registry>, config: &DnsDiscoveryConfig, records: &[SrvRecord]) {
     let desired: HashMap<String, &SrvRecord> = records
         .iter()
         .map(|r| (sanitize_alias(&r.target), r))

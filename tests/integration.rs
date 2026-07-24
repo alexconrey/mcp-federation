@@ -10,11 +10,11 @@ use tokio::sync::RwLock;
 
 use mcp_federation::aggregator::Aggregator;
 use mcp_federation::config::{FederationConfig, RateLimitConfig};
+use mcp_federation::notifications::NotificationBroker;
 use mcp_federation::rate_limit::RateLimiter;
 use mcp_federation::rbac::RequestContext;
 use mcp_federation::registry::Registry;
 use mcp_federation::router::Router;
-use mcp_federation::notifications::NotificationBroker;
 use mcp_federation::server::{self, FederationState};
 use mcp_federation::session::SessionManager;
 
@@ -147,10 +147,7 @@ async fn mock_mcp_handler(
         },
     };
 
-    (
-        [(header::CONTENT_TYPE, "application/json")],
-        Json(response),
-    )
+    ([(header::CONTENT_TYPE, "application/json")], Json(response))
 }
 
 async fn mock_healthz() -> &'static str {
@@ -234,10 +231,7 @@ servers:
     let json = serde_json::to_value(&resp).unwrap();
     let tools = json["result"]["tools"].as_array().unwrap();
 
-    let names: Vec<&str> = tools
-        .iter()
-        .map(|t| t["name"].as_str().unwrap())
-        .collect();
+    let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
 
     assert!(names.contains(&"test-leaf__list_pods"));
     assert!(names.contains(&"test-leaf__get_pod"));
@@ -305,10 +299,7 @@ servers:
     let json = serde_json::to_value(&resp).unwrap();
     let tools = json["result"]["tools"].as_array().unwrap();
 
-    let names: Vec<&str> = tools
-        .iter()
-        .map(|t| t["name"].as_str().unwrap())
-        .collect();
+    let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
 
     // Both clusters' list_pods appear with distinct prefixes
     assert!(names.contains(&"cluster-a__list_pods"));
@@ -386,10 +377,7 @@ servers:
     let json = serde_json::to_value(&resp).unwrap();
     let tools = json["result"]["tools"].as_array().unwrap();
 
-    let names: Vec<&str> = tools
-        .iter()
-        .map(|t| t["name"].as_str().unwrap())
-        .collect();
+    let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
 
     // Only native federation tools, no leaf tools
     assert!(!names.iter().any(|n| n.starts_with("dead-leaf__")));
@@ -798,9 +786,7 @@ async fn auth_middleware(
             }
         }
     } else if !skip {
-        request
-            .extensions_mut()
-            .insert(RequestContext::anonymous());
+        request.extensions_mut().insert(RequestContext::anonymous());
     }
 
     next.run(request).await.into_response()
@@ -845,10 +831,7 @@ async fn streamable_mock_handler(
 
     if req.method == "initialize" {
         state.init_count.fetch_add(1, Ordering::Relaxed);
-        let new_id = format!(
-            "sid-{}",
-            state.init_count.load(Ordering::Relaxed)
-        );
+        let new_id = format!("sid-{}", state.init_count.load(Ordering::Relaxed));
         *state.session_id.write().await = Some(new_id.clone());
 
         let body = MockResponse {
@@ -1051,11 +1034,7 @@ async fn dynamic_registration_end_to_end() {
     let base = format!("http://127.0.0.1:{}", api_addr.port());
 
     // 1. GET before registering — empty list.
-    let resp = client
-        .get(format!("{base}/servers"))
-        .send()
-        .await
-        .unwrap();
+    let resp = client.get(format!("{base}/servers")).send().await.unwrap();
     assert_eq!(resp.status(), 200);
     let arr: Vec<serde_json::Value> = resp.json().await.unwrap();
     assert!(arr.is_empty());
@@ -1250,9 +1229,14 @@ async fn dual_mcp_k8s_routing() {
             "tools/call" => {
                 let tool_name = req.params["name"].as_str().unwrap_or("").to_string();
                 let arguments = req.params["arguments"].clone();
-                state.call_log.write().await.push((tool_name.clone(), arguments.clone()));
+                state
+                    .call_log
+                    .write()
+                    .await
+                    .push((tool_name.clone(), arguments.clone()));
 
-                let ns = arguments.get("namespace")
+                let ns = arguments
+                    .get("namespace")
                     .and_then(|v| v.as_str())
                     .unwrap_or("default");
 
@@ -1401,20 +1385,50 @@ servers:
     let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
 
     // Both clusters' tools appear with distinct prefixes
-    assert!(names.contains(&"srv1__list_pods"), "missing srv1__list_pods");
-    assert!(names.contains(&"srv2__list_pods"), "missing srv2__list_pods");
-    assert!(names.contains(&"srv1__get_deployment"), "missing srv1__get_deployment");
-    assert!(names.contains(&"srv2__get_deployment"), "missing srv2__get_deployment");
+    assert!(
+        names.contains(&"srv1__list_pods"),
+        "missing srv1__list_pods"
+    );
+    assert!(
+        names.contains(&"srv2__list_pods"),
+        "missing srv2__list_pods"
+    );
+    assert!(
+        names.contains(&"srv1__get_deployment"),
+        "missing srv1__get_deployment"
+    );
+    assert!(
+        names.contains(&"srv2__get_deployment"),
+        "missing srv2__get_deployment"
+    );
 
     // srv2-only tool appears under srv2 but not srv1
-    assert!(names.contains(&"srv2__list_network_policies"), "missing srv2__list_network_policies");
-    assert!(!names.contains(&"srv1__list_network_policies"), "srv1 should NOT have list_network_policies");
+    assert!(
+        names.contains(&"srv2__list_network_policies"),
+        "missing srv2__list_network_policies"
+    );
+    assert!(
+        !names.contains(&"srv1__list_network_policies"),
+        "srv1 should NOT have list_network_policies"
+    );
 
     // Descriptions are prefixed with the alias
-    let srv1_list_pods = tools.iter().find(|t| t["name"] == "srv1__list_pods").unwrap();
-    assert!(srv1_list_pods["description"].as_str().unwrap().starts_with("[srv1]"));
-    let srv2_list_pods = tools.iter().find(|t| t["name"] == "srv2__list_pods").unwrap();
-    assert!(srv2_list_pods["description"].as_str().unwrap().starts_with("[srv2]"));
+    let srv1_list_pods = tools
+        .iter()
+        .find(|t| t["name"] == "srv1__list_pods")
+        .unwrap();
+    assert!(srv1_list_pods["description"]
+        .as_str()
+        .unwrap()
+        .starts_with("[srv1]"));
+    let srv2_list_pods = tools
+        .iter()
+        .find(|t| t["name"] == "srv2__list_pods")
+        .unwrap();
+    assert!(srv2_list_pods["description"]
+        .as_str()
+        .unwrap()
+        .starts_with("[srv2]"));
 
     // Federation native tools are also present
     assert!(names.contains(&"federation__list_servers"));
@@ -1436,8 +1450,14 @@ servers:
     let json = serde_json::to_value(&resp).unwrap();
     assert!(json.get("error").is_none(), "srv1 list_pods failed: {json}");
     let text = json["result"]["content"][0]["text"].as_str().unwrap();
-    assert!(text.contains("prod-cluster"), "expected prod-cluster in response, got: {text}");
-    assert!(text.contains("kube-system"), "expected kube-system in response, got: {text}");
+    assert!(
+        text.contains("prod-cluster"),
+        "expected prod-cluster in response, got: {text}"
+    );
+    assert!(
+        text.contains("kube-system"),
+        "expected kube-system in response, got: {text}"
+    );
 
     // --- Route list_pods to srv2 → get staging-cluster data ---
 
@@ -1455,7 +1475,10 @@ servers:
     let json = serde_json::to_value(&resp).unwrap();
     assert!(json.get("error").is_none(), "srv2 list_pods failed: {json}");
     let text = json["result"]["content"][0]["text"].as_str().unwrap();
-    assert!(text.contains("staging-cluster"), "expected staging-cluster in response, got: {text}");
+    assert!(
+        text.contains("staging-cluster"),
+        "expected staging-cluster in response, got: {text}"
+    );
 
     // --- Route get_deployment to srv1 ---
 
@@ -1529,7 +1552,10 @@ servers:
     let leaves = topology["leaves"].as_array().unwrap();
     assert_eq!(leaves.len(), 2);
     for leaf in leaves {
-        assert_eq!(leaf["is_federation"], false, "mcp-k8s leaves are not federations");
+        assert_eq!(
+            leaf["is_federation"], false,
+            "mcp-k8s leaves are not federations"
+        );
         let info = &leaf["server_info"];
         assert_eq!(info["name"], "mcp-k8s");
     }
@@ -1589,10 +1615,7 @@ async fn start_sse_leaf() -> SocketAddr {
         "not used"
     }
 
-    let app = axum::Router::new().route(
-        "/mcp",
-        axum::routing::get(sse_handler).post(post_stub),
-    );
+    let app = axum::Router::new().route("/mcp", axum::routing::get(sse_handler).post(post_stub));
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let addr = listener.local_addr().unwrap();
     tokio::spawn(async move {

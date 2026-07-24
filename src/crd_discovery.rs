@@ -32,7 +32,7 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "crd")]
 use schemars::JsonSchema;
 
-use crate::config::{CrdDiscoveryConfig, ConnectionPoolConfig};
+use crate::config::{ConnectionPoolConfig, CrdDiscoveryConfig};
 use crate::registry::Registry;
 
 pub const CRD_API_VERSION: &str = "federation.mcp.io/v1alpha1";
@@ -216,12 +216,8 @@ mod controller {
                 let patch = serde_json::json!({
                     "metadata": { "finalizers": remaining }
                 });
-                api.patch(
-                    &name,
-                    &PatchParams::default(),
-                    &Patch::Merge(&patch),
-                )
-                .await?;
+                api.patch(&name, &PatchParams::default(), &Patch::Merge(&patch))
+                    .await?;
             }
             return Ok(Action::await_change());
         }
@@ -235,12 +231,8 @@ mod controller {
             let patch = serde_json::json!({
                 "metadata": { "finalizers": finalizers }
             });
-            api.patch(
-                &name,
-                &PatchParams::default(),
-                &Patch::Merge(&patch),
-            )
-            .await?;
+            api.patch(&name, &PatchParams::default(), &Patch::Merge(&patch))
+                .await?;
             return Ok(Action::requeue(Duration::from_secs(1)));
         }
 
@@ -297,13 +289,11 @@ mod controller {
             };
 
             let status = MCPServerStatus {
-                health: Some(
-                    if init_ok && entry.is_healthy().await {
-                        "Healthy".into()
-                    } else {
-                        "Unhealthy".into()
-                    },
-                ),
+                health: Some(if init_ok && entry.is_healthy().await {
+                    "Healthy".into()
+                } else {
+                    "Unhealthy".into()
+                }),
                 tool_count: Some(entry.cached_tools.read().await.len() as i32),
                 last_synced: Some(rfc3339_now()),
             };
@@ -334,7 +324,11 @@ mod controller {
         Action::requeue(Duration::from_secs(30))
     }
 
-    pub async fn run(config: CrdDiscoveryConfig, registry: Arc<Registry>, pool: ConnectionPoolConfig) {
+    pub async fn run(
+        config: CrdDiscoveryConfig,
+        registry: Arc<Registry>,
+        pool: ConnectionPoolConfig,
+    ) {
         let client = match Client::try_default().await {
             Ok(c) => c,
             Err(e) => {
@@ -364,7 +358,11 @@ mod controller {
             "starting CRD controller for MCPServer"
         );
 
-        let ctx = Arc::new(Ctx { client, registry, pool_config: pool });
+        let ctx = Arc::new(Ctx {
+            client,
+            registry,
+            pool_config: pool,
+        });
         let controller = Controller::new(api, watcher::Config::default())
             .run(reconcile, error_policy, ctx)
             .for_each(|res| async move {
@@ -419,7 +417,10 @@ mod tests {
 
     #[test]
     fn crd_alias_format() {
-        assert_eq!(crd_alias("mcp-system", "prod-k8s"), "crd-mcp-system-prod-k8s");
+        assert_eq!(
+            crd_alias("mcp-system", "prod-k8s"),
+            "crd-mcp-system-prod-k8s"
+        );
     }
 
     #[test]

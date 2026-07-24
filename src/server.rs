@@ -102,23 +102,21 @@ pub async fn handle_mcp(
 
     // Optional session-id header for `initialize` responses. Kept in a locally
     // scoped tuple so both the JSON and SSE branches below can attach it.
-    let session_header: Option<(&'static str, String)> = if is_initialize
-        && response.error.is_none()
-    {
-        let client_info = extract_client_info(&response);
-        let session_id = state.sessions.create_session(client_info).await;
-        Some((MCP_SESSION_HEADER, session_id))
-    } else {
-        None
-    };
+    let session_header: Option<(&'static str, String)> =
+        if is_initialize && response.error.is_none() {
+            let client_info = extract_client_info(&response);
+            let session_id = state.sessions.create_session(client_info).await;
+            Some((MCP_SESSION_HEADER, session_id))
+        } else {
+            None
+        };
 
     if accepts_sse(&headers) {
         // Streamable HTTP SSE response: wrap the single JSON-RPC reply as one
         // `data:` event. Content-Type is set automatically by `Sse`.
         let json = serde_json::to_string(&response).unwrap_or_default();
-        let event_stream = stream::once(async move {
-            Ok::<_, Infallible>(Event::default().data(json))
-        });
+        let event_stream =
+            stream::once(async move { Ok::<_, Infallible>(Event::default().data(json)) });
         let mut resp = Sse::new(event_stream).into_response();
         if let Some((name, value)) = session_header {
             match value.parse() {
@@ -286,7 +284,10 @@ fn accepts_sse(headers: &HeaderMap) -> bool {
     headers
         .get(header::ACCEPT)
         .and_then(|v| v.to_str().ok())
-        .map(|v| v.split(',').any(|s| s.trim().starts_with("text/event-stream")))
+        .map(|v| {
+            v.split(',')
+                .any(|s| s.trim().starts_with("text/event-stream"))
+        })
         .unwrap_or(false)
 }
 
@@ -342,15 +343,9 @@ pub async fn metrics_handler(
     handle.render()
 }
 
-pub async fn status_handler(
-    State(state): State<Arc<FederationState>>,
-) -> axum::response::Response {
+pub async fn status_handler(State(state): State<Arc<FederationState>>) -> axum::response::Response {
     let html = render_status_html(&state.registry).await;
-    (
-        [(header::CONTENT_TYPE, "text/html; charset=utf-8")],
-        html,
-    )
-        .into_response()
+    ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], html).into_response()
 }
 
 pub async fn render_status_html(registry: &Registry) -> String {
@@ -505,7 +500,14 @@ fn handle_initialize(request: &JsonRpcRequest) -> crate::mcp::JsonRpcResponse {
 }
 
 const VALID_LOG_LEVELS: &[&str] = &[
-    "debug", "info", "notice", "warning", "error", "critical", "alert", "emergency",
+    "debug",
+    "info",
+    "notice",
+    "warning",
+    "error",
+    "critical",
+    "alert",
+    "emergency",
 ];
 
 async fn handle_logging_set_level(
@@ -763,9 +765,7 @@ mod tests {
     use crate::router::Router;
     use crate::test_helpers::{make_registry_with_tools, make_tool};
 
-    async fn make_state(
-        entries: Vec<(&str, &str, Vec<serde_json::Value>)>,
-    ) -> FederationState {
+    async fn make_state(entries: Vec<(&str, &str, Vec<serde_json::Value>)>) -> FederationState {
         let registry = make_registry_with_tools(entries).await;
         FederationState {
             aggregator: Aggregator::new(registry.clone()),
@@ -773,9 +773,7 @@ mod tests {
             registry,
             sessions: Arc::new(SessionManager::new(1800, None)),
             allowed_origins: vec![],
-            rate_limiter: Arc::new(RateLimiter::new(
-                crate::config::RateLimitConfig::default(),
-            )),
+            rate_limiter: Arc::new(RateLimiter::new(crate::config::RateLimitConfig::default())),
             notifications: Arc::new(NotificationBroker::new()),
         }
     }
@@ -834,10 +832,7 @@ mod tests {
         let json = serde_json::to_value(&resp).unwrap();
         let tools = json["result"]["tools"].as_array().unwrap();
 
-        let names: Vec<&str> = tools
-            .iter()
-            .map(|t| t["name"].as_str().unwrap())
-            .collect();
+        let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
 
         // 2 leaf tools + 5 native tools = 7
         assert_eq!(tools.len(), 7);
@@ -960,12 +955,7 @@ mod tests {
 
     #[tokio::test]
     async fn status_html_shows_unhealthy_leaf() {
-        let state = make_state(vec![(
-            "sick",
-            "http://sick:8080/mcp",
-            vec![],
-        )])
-        .await;
+        let state = make_state(vec![("sick", "http://sick:8080/mcp", vec![])]).await;
         state
             .registry
             .get_leaf("sick")
@@ -1120,12 +1110,7 @@ mod tests {
     async fn status_html_escapes_leaf_alias() {
         // Alias with a character that would corrupt the HTML if not escaped.
         // make_server_config accepts the raw string; validate() isn't run here.
-        let state = make_state(vec![(
-            "risky<script>",
-            "http://x:8080/mcp",
-            vec![],
-        )])
-        .await;
+        let state = make_state(vec![("risky<script>", "http://x:8080/mcp", vec![])]).await;
 
         let html = render_status_html(&state.registry).await;
         assert!(html.contains("risky&lt;script&gt;"));
@@ -1364,20 +1349,17 @@ mod tests {
         // The stream is unbounded so we time-box the wait.
         let body = resp.into_body();
         let mut stream = body.into_data_stream();
-        let read = tokio::time::timeout(
-            std::time::Duration::from_secs(2),
-            async move {
-                let mut buf = String::new();
-                while let Some(chunk) = stream.next().await {
-                    let bytes = chunk.expect("chunk ok");
-                    buf.push_str(std::str::from_utf8(&bytes).unwrap_or(""));
-                    if buf.contains("notifications/tools/list_changed") {
-                        return buf;
-                    }
+        let read = tokio::time::timeout(std::time::Duration::from_secs(2), async move {
+            let mut buf = String::new();
+            while let Some(chunk) = stream.next().await {
+                let bytes = chunk.expect("chunk ok");
+                buf.push_str(std::str::from_utf8(&bytes).unwrap_or(""));
+                if buf.contains("notifications/tools/list_changed") {
+                    return buf;
                 }
-                buf
-            },
-        )
+            }
+            buf
+        })
         .await
         .expect("SSE event should arrive within timeout");
         publish_task.await.unwrap();
@@ -1440,10 +1422,7 @@ mod tests {
     async fn logging_set_level_stores_preference_on_session() {
         let state = make_state(vec![]).await;
         let sid = state.sessions.create_session(None).await;
-        let req = make_request(
-            "logging/setLevel",
-            serde_json::json!({"level": "debug"}),
-        );
+        let req = make_request("logging/setLevel", serde_json::json!({"level": "debug"}));
         let resp = dispatch(&state, req, &Some(sid.clone()), &RequestContext::admin()).await;
         let json = serde_json::to_value(&resp).unwrap();
         assert!(json.get("error").is_none(), "unexpected error: {json}");
