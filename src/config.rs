@@ -336,10 +336,10 @@ impl FederationConfig {
                 path.display()
             ))
         })?;
-        Self::from_str(&content)
+        Self::parse(&content)
     }
 
-    pub fn from_str(content: &str) -> Result<Self, FederationError> {
+    pub fn parse(content: &str) -> Result<Self, FederationError> {
         let interpolated = interpolate_env_vars(content);
         let config: FederationConfig = serde_yaml::from_str(&interpolated)
             .map_err(|e| FederationError::Config(e.to_string()))?;
@@ -411,7 +411,7 @@ servers:
     url: "http://mcp-k8s-staging:8080/mcp"
     transport: streamable-http
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.listen, "0.0.0.0:9090");
         assert_eq!(config.federation.auth_token, Some("my-secret".to_string()));
         assert_eq!(config.servers.len(), 2);
@@ -429,7 +429,7 @@ federation:
   listen: "0.0.0.0:8080"
 servers: []
 "#;
-        let err = FederationConfig::from_str(yaml).unwrap_err();
+        let err = FederationConfig::parse(yaml).unwrap_err();
         assert!(err.to_string().contains("at least one server"));
     }
 
@@ -444,7 +444,7 @@ servers:
   - alias: "prod"
     url: "http://b:8080/mcp"
 "#;
-        let err = FederationConfig::from_str(yaml).unwrap_err();
+        let err = FederationConfig::parse(yaml).unwrap_err();
         assert!(err.to_string().contains("duplicate server alias"));
     }
 
@@ -457,7 +457,7 @@ servers:
   - alias: "prod__k8s"
     url: "http://a:8080/mcp"
 "#;
-        let err = FederationConfig::from_str(yaml).unwrap_err();
+        let err = FederationConfig::parse(yaml).unwrap_err();
         assert!(err.to_string().contains("cannot contain '__'"));
     }
 
@@ -469,7 +469,7 @@ servers:
   - alias: "test"
     url: "http://test:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.listen, "0.0.0.0:8080");
         assert_eq!(config.federation.endpoint, "/mcp");
         assert_eq!(config.servers[0].transport, TransportType::HttpPost);
@@ -511,7 +511,7 @@ servers:
   - alias: "staging-k8s"
     url: "http://staging:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         let clients = &config.federation.clients;
         assert_eq!(clients.len(), 3);
         assert_eq!(clients[0].token, "team-a-token");
@@ -535,7 +535,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert!(config.federation.rate_limit.enabled);
         assert_eq!(config.federation.rate_limit.requests_per_second, 25);
         assert_eq!(config.federation.rate_limit.burst_size, 50);
@@ -551,7 +551,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert!(config.federation.rate_limit.enabled);
         assert_eq!(config.federation.rate_limit.requests_per_second, 10);
         assert_eq!(config.federation.rate_limit.burst_size, 20);
@@ -569,7 +569,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.session_ttl_seconds, 60);
         assert_eq!(config.federation.allowed_origins.len(), 2);
         assert_eq!(
@@ -587,7 +587,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.tool_cache_ttl_seconds, 60);
     }
 
@@ -600,7 +600,7 @@ servers:
     url: "http://slow:8080/mcp"
     timeout_seconds: 120
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.servers[0].timeout_seconds, Some(120));
     }
 
@@ -615,7 +615,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.connection_pool.max_idle_per_host, 42);
         assert_eq!(config.federation.connection_pool.idle_timeout_seconds, 300);
     }
@@ -631,7 +631,7 @@ servers:
       failure_threshold: 5
       backoff_multiplier: 3.0
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.servers[0].health_check.failure_threshold, 5);
         assert!((config.servers[0].health_check.backoff_multiplier - 3.0).abs() < f64::EPSILON);
     }
@@ -646,7 +646,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.auth_token, Some("sekret-abc".to_string()));
         std::env::remove_var("MCP_FED_TEST_TOKEN_A");
     }
@@ -661,7 +661,7 @@ servers:
     url: "http://leaf:8080/mcp"
     auth_token: "${MCP_FED_TEST_MISSING_XYZ}"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.servers[0].auth_token, Some("".to_string()));
     }
 
@@ -675,7 +675,7 @@ servers:
   - alias: "leaf"
     url: "http://${MCP_FED_TEST_HOST}:${MCP_FED_TEST_PORT}/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.servers[0].url, "http://leaf.example.com:9000/mcp");
         std::env::remove_var("MCP_FED_TEST_HOST");
         std::env::remove_var("MCP_FED_TEST_PORT");
@@ -697,7 +697,7 @@ servers:
   - alias: "leaf"
     url: "https://leaf:8443/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert!(config.servers[0].tls.verify);
         assert!(config.servers[0].tls.ca_cert_path.is_none());
     }
@@ -713,7 +713,7 @@ servers:
       verify: false
       ca_cert_path: "/etc/pki/leaf-ca.pem"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert!(!config.servers[0].tls.verify);
         assert_eq!(
             config.servers[0].tls.ca_cert_path.as_deref(),
@@ -730,7 +730,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(
             config.federation.auth_token_file.as_deref(),
             Some(std::path::Path::new("/var/run/secrets/federation/token"))
@@ -745,7 +745,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert!(!config.federation.dns_discovery.enabled);
         assert_eq!(config.federation.dns_discovery.poll_interval_seconds, 60);
         assert_eq!(
@@ -771,7 +771,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         let dns = &config.federation.dns_discovery;
         assert!(dns.enabled);
         assert_eq!(dns.srv_name, "_mcp._tcp.example.com");
@@ -791,7 +791,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert!(config.federation.crd_discovery.enabled);
         assert_eq!(config.federation.crd_discovery.namespace, "mcp-system");
     }
@@ -805,7 +805,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(config.federation.shutdown_timeout_seconds, 45);
     }
 
@@ -818,7 +818,7 @@ servers:
   - alias: "leaf"
     url: "http://leaf:8080/mcp"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(
             config.federation.session_secret.as_deref(),
             Some("c2VjcmV0LWJhc2U2NA==")
@@ -834,7 +834,7 @@ servers:
     url: "http://leaf:8080/mcp"
     auth_token_file: "/var/run/secrets/leaf/token"
 "#;
-        let config = FederationConfig::from_str(yaml).unwrap();
+        let config = FederationConfig::parse(yaml).unwrap();
         assert_eq!(
             config.servers[0].auth_token_file.as_deref(),
             Some(std::path::Path::new("/var/run/secrets/leaf/token"))

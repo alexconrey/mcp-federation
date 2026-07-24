@@ -578,6 +578,7 @@ async fn run_http(
     tracing::info!("shutting down gracefully");
 }
 
+#[allow(clippy::too_many_arguments)]
 async fn run_https(
     state: Arc<FederationState>,
     listen: &str,

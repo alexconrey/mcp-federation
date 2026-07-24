@@ -216,7 +216,7 @@ servers:
         addr.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -285,7 +285,7 @@ servers:
         addr_b.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -333,7 +333,7 @@ servers:
         addr.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -358,7 +358,7 @@ servers:
       timeout_seconds: 1
 "#;
 
-    let config = FederationConfig::from_str(yaml).unwrap();
+    let config = FederationConfig::parse(yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -400,7 +400,7 @@ servers:
         addr.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -449,7 +449,7 @@ servers:
         addr.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -506,7 +506,7 @@ servers:
         addr.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -613,7 +613,7 @@ servers:
         addr_stg.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let clients: Vec<ClientConfig> = config.federation.clients.clone();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
@@ -959,7 +959,7 @@ servers:
         addr.port()
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 
@@ -1366,7 +1366,7 @@ servers:
         srv2_addr.port(),
     );
 
-    let config = FederationConfig::from_str(&yaml).unwrap();
+    let config = FederationConfig::parse(&yaml).unwrap();
     let registry = Arc::new(Registry::from_configs(config.servers));
     registry.initialize_all().await;
 

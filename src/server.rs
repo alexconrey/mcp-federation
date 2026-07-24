@@ -306,6 +306,7 @@ fn extract_client_info(response: &crate::mcp::JsonRpcResponse) -> Option<serde_j
         .cloned()
 }
 
+#[allow(clippy::result_large_err)]
 fn check_origin(
     state: &FederationState,
     headers: &HeaderMap,

@@ -70,15 +70,15 @@ pub async fn make_registry_with_tools(
     Arc::new(registry)
 }
 
-pub async fn make_registry_with_all(
-    entries: Vec<(
-        &str,
-        &str,
-        Vec<serde_json::Value>,
-        Vec<serde_json::Value>,
-        Vec<serde_json::Value>,
-    )>,
-) -> Arc<Registry> {
+type AllEntry<'a> = (
+    &'a str,
+    &'a str,
+    Vec<serde_json::Value>,
+    Vec<serde_json::Value>,
+    Vec<serde_json::Value>,
+);
+
+pub async fn make_registry_with_all(entries: Vec<AllEntry<'_>>) -> Arc<Registry> {
     let registry = Registry::new();
     {
         let mut leaves = registry.leaves_mut().await;

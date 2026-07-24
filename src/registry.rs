@@ -108,9 +108,15 @@ pub struct Registry {
     pool_config: ConnectionPoolConfig,
 }
 
+impl Default for Registry {
+    fn default() -> Self {
+        Self::with_pool(ConnectionPoolConfig::default())
+    }
+}
+
 impl Registry {
     pub fn new() -> Self {
-        Self::with_pool(ConnectionPoolConfig::default())
+        Self::default()
     }
 
     pub fn with_pool(pool_config: ConnectionPoolConfig) -> Self {
