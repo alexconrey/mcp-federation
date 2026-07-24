@@ -42,7 +42,9 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           push: true
-          platforms: linux/amd64,linux/arm64
+          build-args: |
+            TARGETPLATFORM=linux/amd64
+            BUILDPLATFORM=linux/amd64
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
