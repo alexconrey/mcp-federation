@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mcp-federation.fullname" . }}
+  labels:
+    {{- include "mcp-federation.labels" . | nindent 4 }}
+data:
+  federation.yaml: |
+    {{- .Values.config | nindent 4 }}

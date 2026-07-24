@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-federation
+  namespace: mcp-federation
+  labels:
+    app.kubernetes.io/name: mcp-federation
+    app.kubernetes.io/part-of: mcp-federation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mcp-federation
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mcp-federation
+        app.kubernetes.io/part-of: mcp-federation
+    spec:
+      serviceAccountName: mcp-federation
+      containers:
+        - name: mcp-federation
+          image: ghcr.io/alexconrey/mcp-federation:latest
+          command: ["/mcp-federation", "--http"]
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: MCP_FEDERATION_LISTEN
+              value: "0.0.0.0:8080"
+            - name: MCP_FEDERATION_CONFIG
+              value: "/etc/mcp-federation/federation.yaml"
+            - name: LOG_FORMAT
+              value: "text"
+            # Uncomment to require client bearer auth:
+            # - name: MCP_FEDERATION_AUTH_TOKEN
+            #   value: "your-bearer-token"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/mcp-federation
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: mcp-federation

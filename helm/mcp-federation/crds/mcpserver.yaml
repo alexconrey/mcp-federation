@@ -1,0 +1,109 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mcpservers.federation.mcp.io
+spec:
+  group: federation.mcp.io
+  scope: Namespaced
+  names:
+    plural: mcpservers
+    singular: mcpserver
+    kind: MCPServer
+    shortNames:
+      - mcps
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          required:
+            - spec
+          properties:
+            spec:
+              type: object
+              required:
+                - alias
+                - url
+              properties:
+                alias:
+                  type: string
+                  description: >-
+                    Federation alias to register this leaf under. Must not contain
+                    the namespace separator ("__").
+                  pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+                url:
+                  type: string
+                  description: Full MCP endpoint URL (e.g. http://svc.ns.svc:8080/mcp)
+                transport:
+                  type: string
+                  enum:
+                    - http-post
+                    - streamable-http
+                  default: http-post
+                tags:
+                  type: array
+                  items:
+                    type: string
+                authToken:
+                  type: string
+                  description: >-
+                    Bearer token for the leaf. Prefer authTokenFile with a
+                    projected Secret for anything sensitive.
+                authTokenFile:
+                  type: string
+                  description: Path to a file containing the leaf's bearer token.
+                timeoutSeconds:
+                  type: integer
+                  minimum: 1
+            status:
+              type: object
+              properties:
+                health:
+                  type: string
+                  enum:
+                    - Unknown
+                    - Healthy
+                    - Unhealthy
+                toolCount:
+                  type: integer
+                lastSynced:
+                  type: string
+                  format: date-time
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: URL
+          type: string
+          jsonPath: .spec.url
+        - name: Transport
+          type: string
+          jsonPath: .spec.transport
+        - name: Health
+          type: string
+          jsonPath: .status.health
+        - name: Tools
+          type: integer
+          jsonPath: .status.toolCount
+        - name: Last Synced
+          type: string
+          jsonPath: .status.lastSynced
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
+---
+# Example MCPServer instance. Commit one of these next to each mcp-k8s
+# deployment; the federation will discover and register it automatically.
+apiVersion: federation.mcp.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: prod-k8s
+  namespace: mcp-system
+spec:
+  alias: prod-k8s
+  url: http://mcp-k8s.mcp-system.svc:8080/mcp
+  transport: http-post
+  tags:
+    - kubernetes
+    - production

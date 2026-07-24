@@ -1,0 +1,21 @@
+FROM rust:1.89 AS builder
+
+WORKDIR /build
+
+RUN apt-get update && apt-get install -y --no-install-recommends musl-tools \
+    && rm -rf /var/lib/apt/lists/* \
+    && rustup target add aarch64-unknown-linux-musl
+
+COPY Cargo.toml Cargo.lock ./
+COPY src/ src/
+
+RUN cargo build --release --target aarch64-unknown-linux-musl \
+    && cp target/aarch64-unknown-linux-musl/release/mcp-federation /out
+
+FROM gcr.io/distroless/cc-debian12:nonroot
+
+COPY --from=builder /out /mcp-federation
+
+EXPOSE 8080
+
+ENTRYPOINT ["/mcp-federation", "--http"]

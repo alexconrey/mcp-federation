@@ -1,0 +1,181 @@
+# mcp-federation configuration
+#
+# This is a fully-annotated example. Every option is documented; anything
+# commented out is optional and shown with its default. See README.md
+# ("Configuration reference") for the same fields in table form.
+#
+# String values everywhere in this file support ${ENV_VAR} interpolation
+# against the process environment.
+
+federation:
+  # Bind address (HTTP/HTTPS mode).
+  listen: "0.0.0.0:8080"
+
+  # Path the MCP JSON-RPC endpoint lives at.
+  endpoint: "/mcp"
+
+  # -------------------------------------------------------------------------
+  # Client-facing authentication
+  # -------------------------------------------------------------------------
+  # If both are unset, /mcp is unauthenticated. If both are set, `auth_token`
+  # wins. Prefer `auth_token_file` for rotation — the file is re-read on every
+  # request, so writing a new token (atomically) rotates without a restart.
+  #
+  # auth_token: "your-bearer-token"
+  # auth_token_file: /var/run/secrets/federation/token
+
+  # -------------------------------------------------------------------------
+  # Sessions (MCP Streamable HTTP)
+  # -------------------------------------------------------------------------
+  # Sessions expire after this many seconds of inactivity.
+  # session_ttl_seconds: 1800
+  #
+  # Base64-encoded HMAC key used to sign session JWTs. If unset a random key
+  # is generated at startup — sessions won't survive a restart. Set this to a
+  # stable value so sessions survive deploys / rolling restarts.
+  # session_secret: ""
+
+  # -------------------------------------------------------------------------
+  # Tool cache
+  # -------------------------------------------------------------------------
+  # Cached tool lists older than this trigger a background refresh from the
+  # leaf. Set to 0 to disable the background refresh (tools are still cached
+  # from initialize and manual `federation__refresh` calls).
+  # tool_cache_ttl_seconds: 300
+
+  # -------------------------------------------------------------------------
+  # Shutdown (HTTPS only today)
+  # -------------------------------------------------------------------------
+  # Grace period for in-flight connections when SIGTERM / SIGINT is received.
+  # shutdown_timeout_seconds: 15
+
+  # -------------------------------------------------------------------------
+  # Origin allowlist (DNS-rebinding protection)
+  # -------------------------------------------------------------------------
+  # If non-empty, /mcp rejects requests whose Origin header is not in the
+  # list. Leave empty to accept every origin (useful for CLI clients that
+  # don't send Origin).
+  # allowed_origins:
+  #   - "https://console.example.com"
+  #   - "https://tools.example.com"
+
+  # -------------------------------------------------------------------------
+  # Outbound HTTP connection pool (per leaf host)
+  # -------------------------------------------------------------------------
+  # connection_pool:
+  #   max_idle_per_host: 10
+  #   idle_timeout_seconds: 90
+
+  # -------------------------------------------------------------------------
+  # Per-client RBAC
+  # -------------------------------------------------------------------------
+  # Each entry defines a bearer token and the leaves it may see/invoke.
+  # `allowed_servers: ["*"]` grants the same visibility as the admin
+  # auth_token. Federation-native tools (federation__list_servers etc.) are
+  # always allowed regardless of RBAC.
+  # clients:
+  #   - token: "team-a-token"
+  #     allowed_servers: ["prod-k8s"]
+  #   - token: "team-b-token"
+  #     allowed_servers: ["prod-k8s", "staging-k8s"]
+  #   - token: "readonly-token"
+  #     allowed_servers: ["*"]
+
+  # -------------------------------------------------------------------------
+  # Per-client rate limiting (token bucket)
+  # -------------------------------------------------------------------------
+  # Keyed by client identity (admin / client-N / anonymous). Exceeded
+  # requests return HTTP 429 with JSON-RPC error -32000.
+  # rate_limit:
+  #   enabled: false
+  #   requests_per_second: 10
+  #   burst_size: 20
+
+  # -------------------------------------------------------------------------
+  # DNS SRV-based discovery
+  # -------------------------------------------------------------------------
+  # Polls a SRV record and reconciles leaves under `dns-<sanitized-target>`
+  # aliases. Requires the `dig` binary on PATH.
+  # dns_discovery:
+  #   enabled: false
+  #   srv_name: "_mcp._tcp.example.com"
+  #   poll_interval_seconds: 60
+  #   default_transport: http-post
+  #   scheme: http
+  #   url_path: /mcp
+
+  # -------------------------------------------------------------------------
+  # Kubernetes CRD-based discovery
+  # -------------------------------------------------------------------------
+  # Requires the binary to be built with `--features crd`. Watches the
+  # MCPServer CRD (helm/mcp-federation/crds/mcpserver.yaml) and registers
+  # leaves under `crd-<namespace>-<name>` aliases. Empty `namespace` means
+  # all namespaces.
+  # crd_discovery:
+  #   enabled: false
+  #   namespace: "mcp-system"
+
+servers:
+  # Every leaf MCP server the federation aggregates. Aliases become the
+  # tool namespace (e.g. `prod-k8s__list_pods`) and MUST NOT contain `__`.
+  #
+  # Only `alias` and `url` are required. Everything else has a sensible
+  # default and is shown here for reference.
+
+  - alias: "prod-k8s"
+    url: "http://mcp-k8s-prod.internal:8080/mcp"
+    transport: http-post          # http-post | streamable-http
+    tags: ["kubernetes", "production"]
+    # timeout_seconds: 30
+
+    # Leaf-side bearer token (federation → leaf). Prefer auth_token_file so
+    # rotations don't need a config reload.
+    # auth_token: "leaf-bearer-token"
+    # auth_token_file: /var/run/secrets/leaf/token
+
+    health_check:
+      enabled: true
+      interval_seconds: 30
+      timeout_seconds: 5
+      # Once a leaf has failed this many consecutive checks the federation
+      # flips it to Unhealthy and starts backing off.
+      failure_threshold: 3
+      # Multiplier applied to interval_seconds per failure past the threshold
+      # (capped at 300s).
+      backoff_multiplier: 2.0
+
+    # TLS settings for HTTPS leaves. Defaults verify the cert and use the
+    # system trust store.
+    # tls:
+    #   verify: true
+    #   ca_cert_path: /etc/pki/leaf-ca.pem
+
+  - alias: "staging-k8s"
+    url: "http://mcp-k8s-staging.internal:8080/mcp"
+    transport: http-post
+    tags: ["kubernetes", "staging"]
+
+  # A Streamable HTTP leaf. Session ids and inline SSE responses are handled
+  # transparently; a long-lived SSE listener is opened at startup so leaf
+  # notifications (e.g. tools/list_changed) fan out to subscribed clients.
+  # - alias: "prod-postgres"
+  #   url: "http://mcp-postgres.internal:8080/mcp"
+  #   transport: streamable-http
+  #   tags: ["database", "production"]
+
+  # An HTTPS leaf behind a private CA.
+  # - alias: "secure-leaf"
+  #   url: "https://secure-leaf.internal:8443/mcp"
+  #   transport: http-post
+  #   auth_token_file: /var/run/secrets/secure-leaf/token
+  #   tls:
+  #     verify: true
+  #     ca_cert_path: /etc/pki/private-ca.pem
+
+  # A child federation (multi-level federation). Its tools appear under the
+  # namespaced alias, so `east__prod-k8s__list_pods` reaches the pod-listing
+  # tool on `prod-k8s` reachable through the `east` child federation.
+  # - alias: "east"
+  #   url: "http://federation-east.internal:8080/mcp"
+  #   transport: streamable-http
+  #   tags: ["region:us-east"]

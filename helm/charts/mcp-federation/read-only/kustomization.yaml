@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../
+
+patches:
+  - target:
+      kind: Deployment
+      name: mcp-federation
+    patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: mcp-federation
+      spec:
+        template:
+          spec:
+            containers:
+              - name: mcp-federation
+                env:
+                  - name: MCP_FEDERATION_AUTH_TOKEN
+                    value: "change-me-bearer-token"
