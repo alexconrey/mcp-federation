@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mcp-federation.fullname" . }}
+  labels:
+    {{- include "mcp-federation.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "mcp-federation.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "mcp-federation.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: {{ include "mcp-federation.serviceAccountName" . }}
+      containers:
+        - name: mcp-federation
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /mcp-federation
+            - --http
+          env:
+            - name: MCP_FEDERATION_CONFIG
+              value: /etc/mcp-federation/federation.yaml
+            - name: LOG_FORMAT
+              value: {{ .Values.logFormat | quote }}
+            {{- if .Values.authToken }}
+            - name: MCP_FEDERATION_AUTH_TOKEN
+              value: {{ .Values.authToken | quote }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/mcp-federation
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "mcp-federation.fullname" . }}

@@ -1,0 +1,92 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install mdBook
+        run: |
+          mkdir -p "$HOME/.cargo/bin"
+          MDBOOK_VERSION=$(curl -s https://api.github.com/repos/rust-lang/mdBook/releases/latest | grep tag_name | cut -d'"' -f4)
+          curl -sSL "https://github.com/rust-lang/mdBook/releases/download/${MDBOOK_VERSION}/mdbook-${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz" | tar -xz -C "$HOME/.cargo/bin"
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        run: mdbook build docs/
+
+      - name: Determine version
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "is_tag=true" >> $GITHUB_OUTPUT
+          else
+            echo "version=latest" >> $GITHUB_OUTPUT
+            echo "is_tag=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare deploy directory
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          mkdir -p deploy/$VERSION
+
+          # Copy docs to versioned directory
+          cp -r docs/book/* deploy/$VERSION/
+
+          # For tags, also copy to /latest/
+          if [[ "${{ steps.version.outputs.is_tag }}" == "true" ]]; then
+            mkdir -p deploy/latest
+            cp -r docs/book/* deploy/latest/
+          fi
+
+          # Build versions.json
+          git fetch origin gh-pages:gh-pages 2>/dev/null || true
+          if git show gh-pages:versions.json > /tmp/old_versions.json 2>/dev/null; then
+            VERSIONS=$(cat /tmp/old_versions.json)
+          else
+            VERSIONS='[]'
+          fi
+
+          if ! echo "$VERSIONS" | jq -e ".[] | select(.version == \"$VERSION\")" > /dev/null 2>&1; then
+            VERSIONS=$(echo "$VERSIONS" | jq ". + [{\"version\": \"$VERSION\", \"url\": \"/$VERSION/\"}]")
+          fi
+
+          VERSIONS=$(echo "$VERSIONS" | jq '[
+            (.[] | select(.version == "latest")),
+            ([.[] | select(.version != "latest")] | sort_by(.version) | reverse)[]
+          ]')
+
+          echo "$VERSIONS" > deploy/versions.json
+
+          # Root redirect
+          cat > deploy/index.html << 'REDIRECT'
+          <!DOCTYPE html>
+          <html>
+          <head><meta http-equiv="refresh" content="0; url=latest/"></head>
+          <body><a href="latest/">Redirecting to latest docs...</a></body>
+          </html>
+          REDIRECT
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          keep_files: true

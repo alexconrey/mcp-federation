@@ -1,0 +1,6 @@
+apiVersion: v2
+name: mcp-federation
+description: MCP federation server — aggregate multiple MCP leaf servers into a single endpoint
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

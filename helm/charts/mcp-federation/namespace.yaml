@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mcp-federation
+  labels:
+    app.kubernetes.io/name: mcp-federation
+    app.kubernetes.io/part-of: mcp-federation

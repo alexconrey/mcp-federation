@@ -1,0 +1,70 @@
+image:
+  repository: ghcr.io/alexconrey/mcp-federation
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 8080
+
+# Federation config — this becomes the federation.yaml mounted into the pod.
+# Override with `--set-file config=path/to/federation.yaml` or provide inline.
+config: |
+  federation:
+    listen: "0.0.0.0:8080"
+    endpoint: "/mcp"
+
+  servers: []
+  # - alias: "prod-k8s"
+  #   url: "http://mcp-k8s-prod.internal:8080/mcp"
+  #   transport: http-post
+  #   tags: ["kubernetes", "production"]
+  #   health_check:
+  #     enabled: true
+  #     interval_seconds: 30
+  #     timeout_seconds: 5
+
+# Bearer token for client auth. Overrides auth_token in the config file if set.
+authToken: ""
+
+# Log format: "text" or "json".
+logFormat: text
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+serviceAccount:
+  create: true
+  # If empty, the name is auto-generated using the fullname template.
+  name: ""
+
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+
+pdb:
+  enabled: false
+  # minAvailable: 1
+  # maxUnavailable: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+networkPolicy:
+  enabled: false
+  # Restrict ingress to specific CIDRs
+  allowedCIDRs: []
+  # Restrict ingress to pods in specific namespaces
+  allowedNamespaces: []
