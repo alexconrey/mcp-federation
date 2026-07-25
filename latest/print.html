@@ -1,0 +1,1132 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>mcp-federation Documentation</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-d279d366.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/version-select-f70ceab2.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-3dab95ff.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-00956690.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">mcp-federation Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/alexconrey/mcp-federation" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="mcp-federation"><a class="header" href="#mcp-federation">mcp-federation</a></h1>
+<p>An aggregating <a href="https://modelcontextprotocol.io">Model Context Protocol</a> (MCP)
+server. <code>mcp-federation</code> sits in front of N downstream (“leaf”) MCP servers
+and exposes them to clients as a <strong>single MCP endpoint</strong> with a unified tool
+catalog.</p>
+<p>Every leaf tool is namespaced with the leaf’s alias (<code>alias__tool</code>),
+health is monitored, tools are cached, and requests are routed to the
+appropriate leaf.</p>
+<h2 id="why-federation"><a class="header" href="#why-federation">Why federation?</a></h2>
+<p>You have several MCP servers – one per Kubernetes cluster, one per database,
+one for your ticketing system, one on every CI runner. Clients want a <strong>single
+endpoint</strong> rather than a config file with N entries that each rotate
+independently.</p>
+<p><code>mcp-federation</code> is that single endpoint. It:</p>
+<ul>
+<li><strong>Aggregates</strong> – fetches every leaf’s tool list at startup and on refresh.</li>
+<li><strong>Namespaces</strong> – rewrites each tool name as <code>alias__tool_name</code> so the same
+logical tool can exist on several leaves without collision.</li>
+<li><strong>Routes</strong> – strips the alias off incoming <code>tools/call</code> requests and forwards
+the call to the right leaf.</li>
+<li><strong>Monitors</strong> – health-checks each leaf, drops unhealthy ones from the
+advertised tool list, and applies exponential backoff to failing leaves.</li>
+<li><strong>Caches</strong> – tool lists are cached with a TTL and refreshed in the background
+on demand.</li>
+<li><strong>Secures</strong> – bearer-token auth, per-client RBAC, TLS, rate limiting,
+origin allowlist.</li>
+<li><strong>Observes</strong> – Prometheus metrics, structured JSON logs with per-request
+trace IDs, an admin status page, and OpenAPI docs.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<h2 id="from-source"><a class="header" href="#from-source">From source</a></h2>
+<pre><code class="language-bash">cargo build --release
+</code></pre>
+<p>The binary is at <code>target/release/mcp-federation</code>.</p>
+<h2 id="docker"><a class="header" href="#docker">Docker</a></h2>
+<p>Multi-arch images (linux/amd64, linux/arm64) are published to GHCR:</p>
+<pre><code class="language-bash">docker pull ghcr.io/alexconrey/mcp-federation:latest
+</code></pre>
+<h2 id="helm"><a class="header" href="#helm">Helm</a></h2>
+<p>A first-class Helm chart lives at <code>helm/mcp-federation/</code>. See the
+<a href="#helm-chart">Helm deployment</a> chapter for install instructions.</p>
+<h2 id="feature-flags"><a class="header" href="#feature-flags">Feature flags</a></h2>
+<ul>
+<li><code>crd</code> – enable the Kubernetes CRD watcher. Pulls in the <code>kube</code>,
+<code>k8s-openapi</code>, and <code>schemars</code> crates. Off by default to keep the base
+binary small.</li>
+</ul>
+<pre><code class="language-bash">cargo build --release --features crd
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
+<p>The config file is YAML. Every string value supports <code>${ENV_VAR}</code> interpolation
+against the process environment (unset vars expand to empty strings).</p>
+<h2 id="minimal-example"><a class="header" href="#minimal-example">Minimal example</a></h2>
+<pre><code class="language-yaml">federation:
+  listen: "0.0.0.0:8080"
+  endpoint: "/mcp"
+
+servers:
+  - alias: "prod-k8s"
+    url: "http://mcp-k8s-prod.internal:8080/mcp"
+    transport: http-post
+    tags: ["kubernetes", "production"]
+
+  - alias: "staging-k8s"
+    url: "http://mcp-k8s-staging.internal:8080/mcp"
+    transport: http-post
+    tags: ["kubernetes", "staging"]
+</code></pre>
+<h2 id="environment-variable-interpolation"><a class="header" href="#environment-variable-interpolation">Environment variable interpolation</a></h2>
+<p>Any <code>${ENV_VAR}</code> in the config file itself is interpolated, so you can
+push leaf auth tokens in via the environment:</p>
+<pre><code class="language-yaml">servers:
+  - alias: "prod-k8s"
+    url: "http://mcp-k8s:8080/mcp"
+    auth_token: "${PROD_K8S_TOKEN}"
+</code></pre>
+<p>See the <a href="#federation-settings">Configuration Reference</a> section for the
+full schema.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h1>
+<h2 id="1-write-a-federationyaml"><a class="header" href="#1-write-a-federationyaml">1. Write a <code>federation.yaml</code></a></h2>
+<pre><code class="language-yaml">federation:
+  listen: "0.0.0.0:8080"
+  endpoint: "/mcp"
+
+servers:
+  - alias: "prod-k8s"
+    url: "http://mcp-k8s-prod.internal:8080/mcp"
+    transport: http-post
+    tags: ["kubernetes", "production"]
+
+  - alias: "staging-k8s"
+    url: "http://mcp-k8s-staging.internal:8080/mcp"
+    transport: http-post
+    tags: ["kubernetes", "staging"]
+</code></pre>
+<h2 id="2-run-it"><a class="header" href="#2-run-it">2. Run it</a></h2>
+<p><strong>Stdio mode</strong> (embeds directly into a Claude-style client):</p>
+<pre><code class="language-bash">cargo run -- --config federation.yaml
+</code></pre>
+<p><strong>HTTP mode</strong> (single shared endpoint for many clients):</p>
+<pre><code class="language-bash">cargo run -- --http --config federation.yaml
+</code></pre>
+<p><strong>Docker</strong>:</p>
+<pre><code class="language-bash">docker run --rm -p 8080:8080 \
+  -v $(pwd)/federation.yaml:/etc/mcp-federation/federation.yaml \
+  ghcr.io/alexconrey/mcp-federation:latest \
+  --config /etc/mcp-federation/federation.yaml
+</code></pre>
+<h2 id="3-point-claude-code-or-any-mcp-client-at-it"><a class="header" href="#3-point-claude-code-or-any-mcp-client-at-it">3. Point Claude Code (or any MCP client) at it</a></h2>
+<p>For <strong>HTTP mode</strong>, add to your Claude Code <code>~/.claude.json</code>:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "federation": {
+      "type": "http",
+      "url": "http://localhost:8080/mcp"
+    }
+  }
+}
+</code></pre>
+<p>For <strong>stdio mode</strong>:</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "federation": {
+      "command": "mcp-federation",
+      "args": ["--config", "/etc/mcp-federation/federation.yaml"]
+    }
+  }
+}
+</code></pre>
+<h2 id="4-verify"><a class="header" href="#4-verify">4. Verify</a></h2>
+<pre><code class="language-bash">curl -s http://localhost:8080/healthz            # -&gt; "ok"
+curl -s http://localhost:8080/status | less      # HTML status page
+curl -s http://localhost:8080/metrics | head     # Prometheus metrics
+open http://localhost:8080/swagger-ui            # OpenAPI docs
+
+# Dry-run: dump the aggregated tool list and exit
+cargo run -- --config federation.yaml --list-tools
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="architecture-overview"><a class="header" href="#architecture-overview">Architecture Overview</a></h1>
+<pre><code>                                                    +----------------+
+                                                    | mcp-k8s (prod) |
+                                                    +----------------+
+                              +------------------+ /
++----------+  MCP JSON-RPC   |                  |/     +-----------------+
+| clients  |----------------&gt;|  mcp-federation  |-----&gt;| mcp-k8s (stage) |
++----------+  (namespaced)   |                  |\     +-----------------+
+                              +------------------+ \
+                                                    +----------------+
+                                                    | mcp-postgres   |
+                                                    +----------------+
+</code></pre>
+<p>Every tool the leaves advertise is re-exported by the federation with a
+<code>&lt;alias&gt;__</code> prefix. So if <code>prod-k8s</code> advertises <code>list_pods</code> and <code>staging-k8s</code>
+also advertises <code>list_pods</code>, clients see both:</p>
+<ul>
+<li><code>prod-k8s__list_pods</code></li>
+<li><code>staging-k8s__list_pods</code></li>
+</ul>
+<p>The <code>__</code> (double underscore) separator is reserved – leaf aliases cannot
+contain it.</p>
+<p>The federation itself advertises five built-in tools under the <code>federation</code>
+namespace (<code>federation__list_servers</code>, <code>federation__topology</code>, etc.) that let
+clients inspect and manage the federation. See
+<a href="#federation-native-tools">Federation-native tools</a>.</p>
+<h2 id="source-layout"><a class="header" href="#source-layout">Source layout</a></h2>
+<pre><code>src/
+├── main.rs              # CLI, startup, auth middleware, SIGHUP reload
+├── server.rs            # /mcp handlers, session lifecycle, dispatch, audit logs
+├── config.rs            # YAML config schema + env interpolation
+├── registry.rs          # Leaf entries: cache, health, dynamic add/remove
+├── leaf_client.rs       # HTTP/JSON-RPC + Streamable HTTP + SSE parsing
+├── aggregator.rs        # Tool namespacing + TTL cache + native tool list
+├── router.rs            # Dispatch tool/resource/prompt calls to leaves
+├── health.rs            # Circuit breaker + exponential backoff
+├── session.rs           # JWT session ids + prune task
+├── rbac.rs              # RequestContext + per-client authorization
+├── rate_limit.rs        # Token-bucket limiter
+├── notifications.rs     # SSE fanout broker
+├── api.rs               # /api/v1/servers dynamic registration REST API
+├── dns_discovery.rs     # DNS SRV polling + reconciler
+├── crd_discovery.rs     # Kubernetes CRD controller (feature-gated)
+└── mcp/                 # JSON-RPC 2.0 types
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="tool-namespacing"><a class="header" href="#tool-namespacing">Tool Namespacing</a></h1>
+<p>Every tool from a leaf MCP server is re-exported by the federation with an
+<code>&lt;alias&gt;__</code> prefix. This prevents name collisions when multiple leaves expose
+tools with the same name.</p>
+<h2 id="how-it-works"><a class="header" href="#how-it-works">How it works</a></h2>
+<p>If <code>prod-k8s</code> advertises <code>list_pods</code> and <code>staging-k8s</code> also advertises
+<code>list_pods</code>, clients see:</p>
+<ul>
+<li><code>prod-k8s__list_pods</code></li>
+<li><code>staging-k8s__list_pods</code></li>
+</ul>
+<p>When a client calls <code>prod-k8s__list_pods</code>, the federation:</p>
+<ol>
+<li>Strips the <code>prod-k8s__</code> prefix to recover the original tool name <code>list_pods</code>.</li>
+<li>Routes the call to the <code>prod-k8s</code> leaf.</li>
+<li>Returns the result to the client.</li>
+</ol>
+<h2 id="rules"><a class="header" href="#rules">Rules</a></h2>
+<ul>
+<li>The <code>__</code> (double underscore) separator is <strong>reserved</strong>. Leaf aliases cannot
+contain <code>__</code>.</li>
+<li>Each alias must be unique across the federation.</li>
+<li>Federation-native tools use the <code>federation</code> alias
+(e.g. <code>federation__list_servers</code>).</li>
+</ul>
+<h2 id="multi-level-namespacing"><a class="header" href="#multi-level-namespacing">Multi-level namespacing</a></h2>
+<p>When federations are nested, namespacing stacks at each hop. A <code>list_pods</code>
+tool on a leaf in <code>federation-east</code>, reachable through
+<code>parent -&gt; east -&gt; prod-k8s</code>, becomes:</p>
+<pre><code>east__prod-k8s__list_pods
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="transports"><a class="header" href="#transports">Transports</a></h1>
+<p>Each leaf declares which MCP transport it speaks in its <code>transport:</code> field.
+The federation itself always accepts both plain HTTP JSON-RPC and the full
+Streamable HTTP transport from clients.</p>
+<h2 id="http-post"><a class="header" href="#http-post"><code>http-post</code></a></h2>
+<p>Simple JSON-RPC over HTTP POST. Every request is stateless. This is the
+default and what <code>mcp-k8s</code> currently speaks.</p>
+<h2 id="streamable-http"><a class="header" href="#streamable-http"><code>streamable-http</code></a></h2>
+<p>The full <a href="https://spec.modelcontextprotocol.io/specification/basic/transports/">MCP Streamable HTTP transport</a>:</p>
+<ul>
+<li>The leaf issues an <code>Mcp-Session-Id</code> header on <code>initialize</code>. Subsequent
+requests must echo it back – the federation tracks the session id per leaf.</li>
+<li>POST responses may be <code>application/json</code> or an inline <code>text/event-stream</code>
+frame carrying one <code>data:</code> event with the JSON-RPC reply. Both are handled.</li>
+<li>On HTTP 404 (session expired) or HTTP 400 (session missing) the federation
+transparently re-initializes and retries the original request once.</li>
+<li>A long-lived <code>GET {leaf_url}</code> SSE stream is opened at startup to receive
+leaf-originated notifications (<code>notifications/tools/list_changed</code>, etc.),
+which are then re-broadcast to subscribed clients.</li>
+</ul>
+<h2 id="client-facing-session-handling"><a class="header" href="#client-facing-session-handling">Client-facing session handling</a></h2>
+<p>The federation’s own <code>/mcp</code> endpoint speaks Streamable HTTP:</p>
+<ul>
+<li><code>POST /mcp initialize</code> returns an <code>Mcp-Session-Id</code> header. Subsequent POSTs
+should echo it. Sessions expire after <code>session_ttl_seconds</code> of inactivity.</li>
+<li><code>POST /mcp</code> with <code>Accept: text/event-stream</code> returns the JSON-RPC reply as
+a single <code>data:</code> event.</li>
+<li><code>GET /mcp</code> (with a valid session id) opens an SSE stream carrying every
+server-initiated notification.</li>
+<li><code>DELETE /mcp</code> explicitly terminates the session.</li>
+<li>Plain HTTP POST clients that never call <code>initialize</code> and never send a
+session header still work – the federation stays backward-compatible with
+the simple JSON-RPC transport.</li>
+</ul>
+<p>Session ids are HMAC-signed JWTs. Set <code>session_secret</code> (base64-encoded) to
+keep them valid across restarts.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="federation-native-tools"><a class="header" href="#federation-native-tools">Federation-Native Tools</a></h1>
+<p>The federation always exposes five built-in tools under the <code>federation</code>
+namespace, independent of any leaf state. They are visible to every client
+(including per-client RBAC entries) since they operate on federation state.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Tool</th><th>Arguments</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>federation__list_servers</code></td><td>none</td><td>List every configured leaf with its URL, transport, tags, health, cached tool count, and <code>is_federation</code>.</td></tr>
+<tr><td><code>federation__server_info</code></td><td><code>alias</code> (required)</td><td>Details for one leaf: health, consecutive failures, cached tool names.</td></tr>
+<tr><td><code>federation__refresh</code></td><td><code>alias</code> (optional)</td><td>Force a tool-list refresh for one leaf, or all leaves when <code>alias</code> is omitted.</td></tr>
+<tr><td><code>federation__search_tools</code></td><td><code>query</code> (required), <code>alias</code> (optional)</td><td>Case-insensitive substring match against tool names and descriptions across leaves.</td></tr>
+<tr><td><code>federation__topology</code></td><td>none</td><td>Full federation tree – this node plus each leaf, including an <code>is_federation</code> flag to walk nested federations.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Under the hood these are just normal MCP tools; a client sees them in
+<code>tools/list</code> alongside every leaf tool.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="discovery"><a class="header" href="#discovery">Discovery</a></h1>
+<p>Leaves can be added three ways. All three coexist – you can have a mix of
+static, DNS-discovered, and CRD-discovered leaves in the same federation,
+and each source manages its own aliases (<code>dns-</code>, <code>crd-</code>, or config-defined).</p>
+<h2 id="static-config"><a class="header" href="#static-config">Static config</a></h2>
+<p>The default. Every entry in <code>servers[]</code> is registered on startup.</p>
+<p><strong>Hot reload</strong>: on <strong>SIGHUP</strong> the config file is re-read. New leaves are
+added, existing leaves whose <code>url</code>/<code>auth_token</code>/<code>transport</code>/<code>timeout_seconds</code>
+changed are replaced, and leaves removed from the file are dropped. Reload
+failures keep the current registry in place.</p>
+<pre><code class="language-bash">kill -HUP $(pgrep mcp-federation)
+</code></pre>
+<h2 id="dynamic-registration-rest-api"><a class="header" href="#dynamic-registration-rest-api">Dynamic registration REST API</a></h2>
+<p>REST endpoints for adding and removing leaves at runtime. Guarded by the
+same bearer-token auth as <code>/mcp</code>.</p>
+<pre><code>POST   /api/v1/servers            Register a new leaf
+GET    /api/v1/servers            List all leaves
+GET    /api/v1/servers/{alias}    Get one leaf
+DELETE /api/v1/servers/{alias}    Deregister a leaf
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">curl -s -X POST http://localhost:8080/api/v1/servers \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "alias": "ephemeral-k8s",
+    "url": "http://mcp-k8s-review-app:8080/mcp",
+    "transport": "http-post",
+    "tags": ["review-app"]
+  }'
+</code></pre>
+<p>Body fields for <code>POST /api/v1/servers</code>: <code>alias</code>, <code>url</code>, <code>transport</code>
+(defaults to <code>http-post</code>), <code>tags</code>, <code>auth_token</code>, <code>timeout_seconds</code>.
+The MCP handshake and tool warm-up happen in the background, so the REST
+call returns as soon as the entry is inserted (HTTP 201).</p>
+<h2 id="dns-srv"><a class="header" href="#dns-srv">DNS SRV</a></h2>
+<p>Set <code>federation.dns_discovery.enabled: true</code> and point <code>srv_name</code> at a
+SRV record. A background task polls the record every
+<code>poll_interval_seconds</code> (default 60s) and reconciles:</p>
+<pre><code class="language-yaml">federation:
+  dns_discovery:
+    enabled: true
+    srv_name: "_mcp._tcp.example.com"
+    poll_interval_seconds: 30
+    default_transport: http-post
+    scheme: http
+    url_path: /mcp
+</code></pre>
+<ul>
+<li>Each <code>priority weight port target</code> from the SRV record becomes a leaf.</li>
+<li>Alias is derived from the sanitized target hostname with a <code>dns-</code> prefix
+(e.g. <code>leaf-1.example.com.</code> -&gt; <code>dns-leaf-1-example-com</code>).</li>
+<li>Targets that disappear from the record are removed on the next poll.</li>
+<li>Only <code>dns-</code>-prefixed aliases are touched – static and CRD leaves are safe.</li>
+</ul>
+<p>Implementation note: shells out to <code>dig SRV +short</code>, so the <code>dig</code> binary
+must be on <code>PATH</code> in the container.</p>
+<h2 id="kubernetes-crd"><a class="header" href="#kubernetes-crd">Kubernetes CRD</a></h2>
+<p>Feature-gated behind <code>--features crd</code>. Watches the <code>MCPServer</code> custom
+resource and registers a leaf per CR.</p>
+<p>Install the CRD:</p>
+<pre><code class="language-bash">kubectl apply -f helm/mcp-federation/crds/mcpserver.yaml
+</code></pre>
+<p>Create leaves as ordinary K8s resources:</p>
+<pre><code class="language-yaml">apiVersion: federation.mcp.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: prod-k8s
+  namespace: mcp-system
+spec:
+  alias: prod-k8s
+  url: http://mcp-k8s.mcp-system.svc:8080/mcp
+  transport: http-post
+  tags:
+    - kubernetes
+    - production
+</code></pre>
+<p>Enable in the federation config:</p>
+<pre><code class="language-yaml">federation:
+  crd_discovery:
+    enabled: true
+    namespace: mcp-system     # empty = all namespaces
+</code></pre>
+<p>Aliases are namespaced (<code>crd-&lt;namespace&gt;-&lt;name&gt;</code>) so CRD leaves don’t
+collide with static or DNS leaves. CR deletion drops the leaf from the
+registry.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="security"><a class="header" href="#security">Security</a></h1>
+<h2 id="bearer-token-auth"><a class="header" href="#bearer-token-auth">Bearer token auth</a></h2>
+<p>Set <code>federation.auth_token</code> (or <code>--auth-token</code>) and every request to
+<code>/mcp</code>, <code>/api/v1/*</code> must present <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<p><code>/healthz</code>, <code>/metrics</code>, <code>/status</code>, <code>/swagger-ui</code>, and <code>/openapi.json</code> are
+always unauthenticated so ops tooling and load balancers can reach them.</p>
+<h2 id="rotating-tokens-without-restart"><a class="header" href="#rotating-tokens-without-restart">Rotating tokens without restart</a></h2>
+<p>Point <code>auth_token_file</code> (or <code>--auth-token-file</code>) at a file. The file is
+re-read on every request – write a new token atomically (write-to-temp +
+rename) and the next request will see it.</p>
+<p>The same pattern applies per leaf: <code>servers[].auth_token_file</code> rotates
+outbound tokens the federation presents to leaves.</p>
+<h2 id="per-client-rbac"><a class="header" href="#per-client-rbac">Per-client RBAC</a></h2>
+<p>See <a href="#federation-settings">Federation Settings</a> for the <code>clients[]</code>
+schema. Each client token has its own visible tool subset. <code>tools/list</code> is
+filtered; <code>tools/call</code> returns <code>access denied</code> for disallowed leaves.
+Federation-native tools always pass.</p>
+<p>Every request is bound to a <code>RequestContext</code> with a <code>client_label</code>
+(<code>admin</code>, <code>client-N</code>, or <code>anonymous</code>) that flows into audit logs and the
+rate limiter’s bucket key.</p>
+<h2 id="tls"><a class="header" href="#tls">TLS</a></h2>
+<p>Client-facing HTTPS is enabled by passing both <code>--tls-cert</code> and
+<code>--tls-key</code> (or the <code>TLS_CERT</code> / <code>TLS_KEY</code> env vars). HTTPS mode also
+honors <code>shutdown_timeout_seconds</code> for graceful drain.</p>
+<p>For <strong>leaf</strong> TLS, <code>servers[].tls</code> controls verification:</p>
+<ul>
+<li><code>verify: false</code> accepts self-signed certs (dev only).</li>
+<li><code>ca_cert_path</code> adds a trust anchor for private CAs.</li>
+</ul>
+<h2 id="origin-allowlist"><a class="header" href="#origin-allowlist">Origin allowlist</a></h2>
+<p>For browser-based clients, populate <code>federation.allowed_origins</code> with the
+exact <code>Origin</code> header values you want to accept. Requests with an <code>Origin</code>
+outside the list get HTTP 403. This defends against DNS-rebinding attacks.</p>
+<h2 id="rate-limiting"><a class="header" href="#rate-limiting">Rate limiting</a></h2>
+<p>See <a href="#federation-settings">Federation Settings</a> for the <code>rate_limit</code>
+schema. Per-client token-bucket, keyed by the authenticated client label.
+Exceeded requests return HTTP 429 with JSON-RPC error <code>-32000</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="observability"><a class="header" href="#observability">Observability</a></h1>
+<h2 id="prometheus-metrics"><a class="header" href="#prometheus-metrics">Prometheus metrics</a></h2>
+<p>Scrape <code>GET /metrics</code> (no auth required). Key metrics:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Metric</th><th>Type</th><th>Labels</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>federation_requests_total</code></td><td>counter</td><td><code>method</code></td><td>Every dispatched JSON-RPC request.</td></tr>
+<tr><td><code>federation_tool_calls_total</code></td><td>counter</td><td><code>tool</code>, <code>alias</code></td><td>Tool call invocations.</td></tr>
+<tr><td><code>federation_tool_call_errors_total</code></td><td>counter</td><td><code>tool</code>, <code>alias</code></td><td>Tool call failures (leaf error, RBAC, unhealthy).</td></tr>
+<tr><td><code>federation_tool_call_duration_seconds</code></td><td>histogram</td><td><code>tool</code>, <code>alias</code></td><td>End-to-end tool call latency.</td></tr>
+<tr><td><code>federation_leaf_health</code></td><td>gauge</td><td><code>alias</code></td><td><code>1.0</code> healthy, <code>0.0</code> unhealthy.</td></tr>
+<tr><td><code>federation_leaf_tool_count</code></td><td>gauge</td><td><code>alias</code></td><td>Cached tool count per leaf.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="structured-logging"><a class="header" href="#structured-logging">Structured logging</a></h2>
+<p>Every request opens a <code>tracing</code> span with <code>trace_id</code>, <code>method</code>, <code>client</code>, and
+(for tool calls) <code>tool</code> + <code>alias</code>. Audit events use structured fields:</p>
+<pre><code class="language-json">{
+  "event": "tool_call",
+  "client": "client-2",
+  "alias": "prod-k8s",
+  "tool": "prod-k8s__list_pods",
+  "status": "success",
+  "duration_ms": 42
+}
+</code></pre>
+<p>Pass <code>--log-format json</code> (or <code>LOG_FORMAT=json</code>) to emit JSON; ideal for
+Loki, CloudWatch, or Datadog ingestion. Set <code>RUST_LOG=debug</code> to raise the
+verbosity.</p>
+<p>Audit events emitted: <code>session_init</code>, <code>logging_set_level</code>, <code>tools_list</code>,
+<code>tool_call</code> (both success and RBAC-denied).</p>
+<h2 id="openapi--swagger"><a class="header" href="#openapi--swagger">OpenAPI / Swagger</a></h2>
+<p><code>GET /swagger-ui</code> renders an interactive OpenAPI 3 explorer;
+<code>GET /openapi.json</code> returns the raw spec. Currently documents the MCP
+JSON-RPC endpoint, session lifecycle, and <code>/healthz</code>.</p>
+<h2 id="status-page"><a class="header" href="#status-page">Status page</a></h2>
+<p><code>GET /status</code> returns a plain HTML dashboard listing every leaf with its
+URL, health, cached tool count, tags, and time since last health check. No
+JavaScript, no auth – safe to expose over a firewall for humans.</p>
+<h2 id="health-check"><a class="header" href="#health-check">Health check</a></h2>
+<p><code>GET /healthz</code> returns <code>200 ok</code>. Cheap; use for liveness/readiness probes.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="multi-level-federation"><a class="header" href="#multi-level-federation">Multi-Level Federation</a></h1>
+<p>Because a federation is itself an MCP server, one federation can be a leaf
+of another federation. Nesting works transparently:</p>
+<pre><code class="language-yaml"># parent-federation.yaml
+servers:
+  - alias: "east"
+    url: "http://federation-east:8080/mcp"
+    transport: streamable-http
+  - alias: "west"
+    url: "http://federation-west:8080/mcp"
+    transport: streamable-http
+</code></pre>
+<p>Tools are namespaced at every hop. A <code>list_pods</code> tool on a leaf in
+<code>federation-east</code> reachable through <code>parent -&gt; east -&gt; prod-k8s</code> becomes:</p>
+<pre><code>east__prod-k8s__list_pods
+</code></pre>
+<p>Each federation captures the child’s <code>serverInfo</code> on initialize and flags
+it via <code>is_federation: true</code> in <code>federation__list_servers</code> and
+<code>federation__topology</code>, so operators can walk the tree.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="docker-1"><a class="header" href="#docker-1">Docker</a></h1>
+<p>Multi-arch images (linux/amd64, linux/arm64) are built by the CI workflow and
+pushed to <code>ghcr.io/alexconrey/mcp-federation:latest</code>. The <code>Dockerfile</code> uses
+a musl static build on top of a distroless base – the runtime image has no
+shell, no package manager, and runs as <code>nonroot</code>.</p>
+<pre><code class="language-bash">docker run --rm -p 8080:8080 \
+  -v $(pwd)/federation.yaml:/etc/mcp-federation/federation.yaml:ro \
+  -e MCP_FEDERATION_AUTH_TOKEN=$TOKEN \
+  ghcr.io/alexconrey/mcp-federation:latest \
+  --config /etc/mcp-federation/federation.yaml
+</code></pre>
+<h2 id="tags"><a class="header" href="#tags">Tags</a></h2>
+<ul>
+<li><code>latest</code> – built from the latest tagged release</li>
+<li><code>v*</code> – specific version tags (e.g. <code>v0.1.0</code>)</li>
+<li><code>&lt;commit-sha&gt;</code> – built from pushes to <code>main</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="helm-chart"><a class="header" href="#helm-chart">Helm Chart</a></h1>
+<p>A first-class Helm chart lives at <code>helm/mcp-federation/</code>.</p>
+<h2 id="what-the-chart-deploys"><a class="header" href="#what-the-chart-deploys">What the chart deploys</a></h2>
+<ul>
+<li><code>Deployment</code> – one or more <code>mcp-federation --http</code> pods.</li>
+<li><code>ConfigMap</code> – holds the rendered <code>federation.yaml</code>, mounted at
+<code>/etc/mcp-federation/federation.yaml</code>.</li>
+<li><code>Service</code> (ClusterIP) – exposes port 8080 in-cluster.</li>
+<li><code>ServiceAccount</code> – created by default; opt out with <code>serviceAccount.create=false</code>.</li>
+<li><code>Ingress</code> – optional (<code>ingress.enabled=true</code>).</li>
+<li><code>HorizontalPodAutoscaler</code> – optional (<code>autoscaling.enabled=true</code>).</li>
+<li><code>PodDisruptionBudget</code> – optional (<code>pdb.enabled=true</code>).</li>
+<li><code>NetworkPolicy</code> – optional (<code>networkPolicy.enabled=true</code>).</li>
+</ul>
+<h2 id="install"><a class="header" href="#install">Install</a></h2>
+<pre><code class="language-bash">helm install mcp-federation ./helm/mcp-federation \
+  --namespace mcp-system --create-namespace \
+  --set-file config=federation.yaml \
+  --set authToken=$MCP_AUTH_TOKEN
+</code></pre>
+<h2 id="upgrade"><a class="header" href="#upgrade">Upgrade</a></h2>
+<pre><code class="language-bash">helm upgrade mcp-federation ./helm/mcp-federation \
+  --namespace mcp-system \
+  --set-file config=federation.yaml
+</code></pre>
+<p>The <code>Deployment</code> has a <code>checksum/config</code> annotation on the pod template so
+config changes trigger a rolling restart automatically.</p>
+<h2 id="key-values"><a class="header" href="#key-values">Key values</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Value</th><th>Default</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>image.repository</code></td><td><code>ghcr.io/alexconrey/mcp-federation</code></td><td>Multi-arch (amd64/arm64) images published by CI.</td></tr>
+<tr><td><code>image.tag</code></td><td><code>latest</code></td><td>Pin to a commit SHA for reproducible deploys.</td></tr>
+<tr><td><code>replicaCount</code></td><td><code>1</code></td><td>Bump for HA.</td></tr>
+<tr><td><code>config</code></td><td>minimal skeleton</td><td>The full <code>federation.yaml</code>. Prefer <code>--set-file config=path</code>.</td></tr>
+<tr><td><code>authToken</code></td><td><code>""</code></td><td>Bearer token for <code>/mcp</code>. Exported as <code>MCP_FEDERATION_AUTH_TOKEN</code>.</td></tr>
+<tr><td><code>logFormat</code></td><td><code>text</code></td><td>Set to <code>json</code> for structured logs.</td></tr>
+<tr><td><code>service.type</code> / <code>service.port</code></td><td><code>ClusterIP</code> / <code>8080</code></td><td>The <code>Service</code> name is <code>&lt;release&gt;-mcp-federation</code>.</td></tr>
+<tr><td><code>ingress.enabled</code></td><td><code>false</code></td><td>Renders an <code>Ingress</code> on <code>ingress.host</code> with <code>ingress.className</code>.</td></tr>
+<tr><td><code>autoscaling.enabled</code></td><td><code>false</code></td><td>Renders an <code>HPA</code>.</td></tr>
+<tr><td><code>pdb.enabled</code></td><td><code>false</code></td><td>Renders a <code>PodDisruptionBudget</code>.</td></tr>
+<tr><td><code>networkPolicy.enabled</code></td><td><code>false</code></td><td>Restricts ingress to <code>allowedCIDRs</code> / <code>allowedNamespaces</code>.</td></tr>
+</tbody>
+</table>
+</div>
+<p>See <code>values.yaml</code> for the complete list and inline comments.</p>
+<h2 id="uninstall"><a class="header" href="#uninstall">Uninstall</a></h2>
+<pre><code class="language-bash">helm uninstall mcp-federation -n mcp-system
+</code></pre>
+<p>Helm does not delete CRDs installed from <code>crds/</code>. Remove them manually if
+you no longer need them:</p>
+<pre><code class="language-bash">kubectl delete crd mcpservers.federation.mcp.io
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="kubernetes-manifests"><a class="header" href="#kubernetes-manifests">Kubernetes Manifests</a></h1>
+<p>If you prefer plain manifests over Helm, you can deploy <code>mcp-federation</code>
+with a Deployment, Service, and ConfigMap.</p>
+<h2 id="configmap"><a class="header" href="#configmap">ConfigMap</a></h2>
+<p>Mount your <code>federation.yaml</code> as a ConfigMap:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-federation-config
+  namespace: mcp-system
+data:
+  federation.yaml: |
+    federation:
+      listen: "0.0.0.0:8080"
+      endpoint: "/mcp"
+    servers:
+      - alias: prod-k8s
+        url: http://mcp-k8s.mcp-system.svc:8080/mcp
+        transport: http-post
+</code></pre>
+<h2 id="deployment"><a class="header" href="#deployment">Deployment</a></h2>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-federation
+  namespace: mcp-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-federation
+  template:
+    metadata:
+      labels:
+        app: mcp-federation
+    spec:
+      containers:
+        - name: mcp-federation
+          image: ghcr.io/alexconrey/mcp-federation:latest
+          args: ["--config", "/etc/mcp-federation/federation.yaml"]
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/mcp-federation
+      volumes:
+        - name: config
+          configMap:
+            name: mcp-federation-config
+</code></pre>
+<h2 id="service"><a class="header" href="#service">Service</a></h2>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-federation
+  namespace: mcp-system
+spec:
+  selector:
+    app: mcp-federation
+  ports:
+    - port: 8080
+      targetPort: 8080
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="federation-settings"><a class="header" href="#federation-settings">Federation Settings</a></h1>
+<p>Top-level <code>federation</code> settings in the config file.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>listen</code></td><td>string</td><td><code>"0.0.0.0:8080"</code></td><td>Bind address for HTTP/HTTPS mode.</td></tr>
+<tr><td><code>endpoint</code></td><td>string</td><td><code>"/mcp"</code></td><td>Path for the MCP JSON-RPC endpoint.</td></tr>
+<tr><td><code>auth_token</code></td><td>string</td><td>unset</td><td>Bearer token clients must present. If unset, <code>/mcp</code> is unauthenticated.</td></tr>
+<tr><td><code>auth_token_file</code></td><td>string (path)</td><td>unset</td><td>Path to a file containing the bearer token. Re-read on every request so tokens can rotate without restart.</td></tr>
+<tr><td><code>session_ttl_seconds</code></td><td>u64</td><td><code>1800</code></td><td>Streamable HTTP session idle timeout.</td></tr>
+<tr><td><code>session_secret</code></td><td>string (b64)</td><td>unset</td><td>Base64-encoded HMAC key used to sign session JWTs. If unset a random key is generated on startup, meaning sessions do not survive a restart.</td></tr>
+<tr><td><code>tool_cache_ttl_seconds</code></td><td>u64</td><td><code>300</code></td><td>How long an aggregated tool list is considered fresh before a background refresh is triggered.</td></tr>
+<tr><td><code>shutdown_timeout_seconds</code></td><td>u64</td><td><code>15</code></td><td>Grace period for in-flight connections at shutdown.</td></tr>
+<tr><td><code>allowed_origins</code></td><td>list&lt;string&gt;</td><td><code>[]</code></td><td>DNS-rebinding protection: if non-empty, <code>/mcp</code> rejects requests whose <code>Origin</code> header is not in the list.</td></tr>
+<tr><td><code>connection_pool</code></td><td>object</td><td>see below</td><td>HTTP client connection pool tuning for outbound leaf calls.</td></tr>
+<tr><td><code>clients</code></td><td>list</td><td><code>[]</code></td><td>Per-client bearer tokens with RBAC.</td></tr>
+<tr><td><code>rate_limit</code></td><td>object</td><td>disabled</td><td>Per-client token-bucket rate limiter.</td></tr>
+<tr><td><code>dns_discovery</code></td><td>object</td><td>disabled</td><td>DNS SRV-based leaf discovery.</td></tr>
+<tr><td><code>crd_discovery</code></td><td>object</td><td>disabled</td><td>Kubernetes CRD-based leaf discovery.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="connection_pool"><a class="header" href="#connection_pool"><code>connection_pool</code></a></h2>
+<p>Applied to the reqwest client used to reach each leaf.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>max_idle_per_host</code></td><td>usize</td><td><code>10</code></td><td>Max idle connections kept per leaf host.</td></tr>
+<tr><td><code>idle_timeout_seconds</code></td><td>u64</td><td><code>90</code></td><td>How long an idle connection is retained.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="rate_limit"><a class="header" href="#rate_limit"><code>rate_limit</code></a></h2>
+<p>Classic token-bucket. Keyed by client identity (admin token, per-client token,
+or <code>anonymous</code>).</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enabled</code></td><td>bool</td><td><code>false</code></td><td>Turn the limiter on.</td></tr>
+<tr><td><code>requests_per_second</code></td><td>u32</td><td><code>10</code></td><td>Refill rate.</td></tr>
+<tr><td><code>burst_size</code></td><td>u32</td><td><code>20</code></td><td>Bucket capacity.</td></tr>
+</tbody>
+</table>
+</div>
+<p>When a caller is over budget the federation responds with HTTP 429 and JSON-RPC
+error <code>-32000</code> “rate limit exceeded”.</p>
+<h2 id="clients--per-client-rbac"><a class="header" href="#clients--per-client-rbac"><code>clients[]</code> – Per-client RBAC</a></h2>
+<pre><code class="language-yaml">federation:
+  auth_token: "admin-super-secret"
+  clients:
+    - token: "team-a"
+      allowed_servers: ["prod-k8s"]
+    - token: "team-b"
+      allowed_servers: ["prod-k8s", "staging-k8s"]
+    - token: "readonly"
+      allowed_servers: ["*"]   # wildcard = same visibility as admin
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>token</code></td><td>string</td><td>Bearer token the client presents.</td></tr>
+<tr><td><code>allowed_servers</code></td><td>list&lt;string&gt;</td><td>Leaf aliases this client may see and invoke. <code>["*"]</code> grants full access. Federation-native tools always pass.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dns_discovery"><a class="header" href="#dns_discovery"><code>dns_discovery</code></a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enabled</code></td><td>bool</td><td><code>false</code></td><td>Turn discovery on.</td></tr>
+<tr><td><code>srv_name</code></td><td>string</td><td><code>""</code></td><td>Fully-qualified SRV record, e.g. <code>_mcp._tcp.example.com</code>.</td></tr>
+<tr><td><code>poll_interval_seconds</code></td><td>u64</td><td><code>60</code></td><td>How often to re-query the SRV record.</td></tr>
+<tr><td><code>default_transport</code></td><td>enum</td><td><code>http-post</code></td><td>Transport to use for discovered leaves.</td></tr>
+<tr><td><code>url_path</code></td><td>string</td><td><code>"/mcp"</code></td><td>Path appended to each <code>scheme://target:port</code>.</td></tr>
+<tr><td><code>scheme</code></td><td>string</td><td><code>"http"</code></td><td>URL scheme.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="crd_discovery"><a class="header" href="#crd_discovery"><code>crd_discovery</code></a></h2>
+<p>Requires <code>--features crd</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enabled</code></td><td>bool</td><td><code>false</code></td><td>Start the controller.</td></tr>
+<tr><td><code>namespace</code></td><td>string</td><td><code>""</code></td><td>Namespace to watch. Empty means all namespaces (cluster-wide).</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="server-entries"><a class="header" href="#server-entries">Server Entries</a></h1>
+<p>Every entry in the <code>servers[]</code> list is a leaf MCP server the federation
+aggregates.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>alias</code></td><td>string</td><td>required</td><td>Namespace prefix for the leaf’s tools. Must NOT contain <code>__</code>. Must be unique across the federation.</td></tr>
+<tr><td><code>url</code></td><td>string</td><td>required</td><td>Full URL to the leaf’s MCP endpoint (e.g. <code>http://svc:8080/mcp</code>).</td></tr>
+<tr><td><code>transport</code></td><td>enum</td><td><code>http-post</code></td><td><code>http-post</code> or <code>streamable-http</code>.</td></tr>
+<tr><td><code>tags</code></td><td>list&lt;string&gt;</td><td><code>[]</code></td><td>Free-form tags surfaced via <code>federation__list_servers</code> – purely informational.</td></tr>
+<tr><td><code>timeout_seconds</code></td><td>u64</td><td><code>30</code></td><td>Per-request timeout for calls to this leaf.</td></tr>
+<tr><td><code>auth_token</code></td><td>string</td><td>unset</td><td>Bearer token the federation presents when talking to this leaf.</td></tr>
+<tr><td><code>auth_token_file</code></td><td>string (path)</td><td>unset</td><td>Path to a file containing the leaf’s bearer token. Re-read on every request so tokens can rotate.</td></tr>
+<tr><td><code>health_check</code></td><td>object</td><td>see below</td><td>Per-leaf health-check tuning.</td></tr>
+<tr><td><code>tls</code></td><td>object</td><td>see below</td><td>TLS verification settings for HTTPS leaves.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="health_check"><a class="header" href="#health_check"><code>health_check</code></a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>enabled</code></td><td>bool</td><td><code>true</code></td><td>Whether to run the background health monitor at all.</td></tr>
+<tr><td><code>interval_seconds</code></td><td>u64</td><td><code>30</code></td><td>Base polling interval.</td></tr>
+<tr><td><code>timeout_seconds</code></td><td>u64</td><td><code>5</code></td><td>Also used as the TCP connect timeout for regular leaf calls.</td></tr>
+<tr><td><code>failure_threshold</code></td><td>u32</td><td><code>3</code></td><td>Consecutive failures before the leaf is flipped to Unhealthy.</td></tr>
+<tr><td><code>backoff_multiplier</code></td><td>f64</td><td><code>2.0</code></td><td>Once past the threshold, each additional failure multiplies the interval by this factor (capped at 300 s).</td></tr>
+</tbody>
+</table>
+</div>
+<p>Leaves start in <code>Unknown</code> state (treated as healthy for aggregation purposes)
+and flip to <code>Healthy</code> on first successful initialize. On recovery the tool
+list is automatically refreshed.</p>
+<h2 id="tls-1"><a class="header" href="#tls-1"><code>tls</code></a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>verify</code></td><td>bool</td><td><code>true</code></td><td>Verify the leaf’s TLS certificate. Set to <code>false</code> for self-signed dev leaves.</td></tr>
+<tr><td><code>ca_cert_path</code></td><td>string (path)</td><td>unset</td><td>Additional CA certificate (PEM) to trust for this leaf (private CA scenarios).</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="cli-reference"><a class="header" href="#cli-reference">CLI Reference</a></h1>
+<pre><code>mcp-federation [FLAGS]
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Flag</th><th>Env</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--config &lt;PATH&gt;</code></td><td><code>MCP_FEDERATION_CONFIG</code></td><td>Config file path. Defaults to <code>federation.yaml</code>.</td></tr>
+<tr><td><code>--http</code></td><td>–</td><td>Run in HTTP server mode. Without this flag the process runs in stdio mode.</td></tr>
+<tr><td><code>--listen &lt;ADDR&gt;</code></td><td><code>MCP_FEDERATION_LISTEN</code></td><td>Override the <code>federation.listen</code> from config.</td></tr>
+<tr><td><code>--auth-token &lt;TOKEN&gt;</code></td><td><code>MCP_FEDERATION_AUTH_TOKEN</code></td><td>Override the config file’s <code>auth_token</code>.</td></tr>
+<tr><td><code>--auth-token-file &lt;PATH&gt;</code></td><td><code>MCP_FEDERATION_AUTH_TOKEN_FILE</code></td><td>Path to file containing the bearer token. Re-read per request. Takes effect only when <code>--auth-token</code> is unset.</td></tr>
+<tr><td><code>--tls-cert &lt;PATH&gt;</code></td><td><code>TLS_CERT</code></td><td>TLS certificate PEM. Combined with <code>--tls-key</code> switches HTTP mode to HTTPS.</td></tr>
+<tr><td><code>--tls-key &lt;PATH&gt;</code></td><td><code>TLS_KEY</code></td><td>TLS private key PEM.</td></tr>
+<tr><td><code>--log-format &lt;text|json&gt;</code></td><td><code>LOG_FORMAT</code></td><td>Log output format. <code>json</code> emits structured logs for shipping to Loki/CloudWatch.</td></tr>
+<tr><td><code>--list-tools</code></td><td>–</td><td>Load config, initialize leaves, print the full aggregated tool table, and exit. Handy for smoke testing.</td></tr>
+<tr><td><code>--validate</code></td><td>–</td><td>Parse and validate the config file, then exit <code>0</code> on success (<code>1</code> on error). Does NOT start the server or connect to leaves.</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="environment-variables"><a class="header" href="#environment-variables">Environment Variables</a></h1>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Variable</th><th>Equivalent flag</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>MCP_FEDERATION_CONFIG</code></td><td><code>--config</code></td><td>Path to config file.</td></tr>
+<tr><td><code>MCP_FEDERATION_LISTEN</code></td><td><code>--listen</code></td><td>HTTP listen address override.</td></tr>
+<tr><td><code>MCP_FEDERATION_AUTH_TOKEN</code></td><td><code>--auth-token</code></td><td>Bearer token for client auth.</td></tr>
+<tr><td><code>MCP_FEDERATION_AUTH_TOKEN_FILE</code></td><td><code>--auth-token-file</code></td><td>Path to bearer token file (rotation-friendly).</td></tr>
+<tr><td><code>TLS_CERT</code></td><td><code>--tls-cert</code></td><td>Path to TLS cert PEM (with <code>TLS_KEY</code> enables HTTPS).</td></tr>
+<tr><td><code>TLS_KEY</code></td><td><code>--tls-key</code></td><td>Path to TLS key PEM.</td></tr>
+<tr><td><code>LOG_FORMAT</code></td><td><code>--log-format</code></td><td><code>text</code> (default) or <code>json</code>.</td></tr>
+<tr><td><code>RUST_LOG</code></td><td>–</td><td>Standard <code>tracing-subscriber</code> env filter, e.g. <code>debug</code>.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="config-file-interpolation"><a class="header" href="#config-file-interpolation">Config file interpolation</a></h2>
+<p>Any <code>${ENV_VAR}</code> in the config file itself is interpolated too, so you can
+push leaf auth tokens in via the environment:</p>
+<pre><code class="language-yaml">servers:
+  - alias: "prod-k8s"
+    url: "http://mcp-k8s:8080/mcp"
+    auth_token: "${PROD_K8S_TOKEN}"
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="building"><a class="header" href="#building">Building</a></h1>
+<h2 id="default-build"><a class="header" href="#default-build">Default build</a></h2>
+<pre><code class="language-bash">cargo build
+cargo build --release
+</code></pre>
+<h2 id="with-crd-support"><a class="header" href="#with-crd-support">With CRD support</a></h2>
+<p>The <code>crd</code> feature flag enables the Kubernetes CRD watcher, pulling in
+<code>kube</code>, <code>k8s-openapi</code>, and <code>schemars</code>:</p>
+<pre><code class="language-bash">cargo build --release --features crd
+</code></pre>
+<h2 id="linting-and-formatting"><a class="header" href="#linting-and-formatting">Linting and formatting</a></h2>
+<pre><code class="language-bash">cargo clippy --all-targets -- -D warnings
+cargo fmt --check
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
+<h2 id="run-all-tests"><a class="header" href="#run-all-tests">Run all tests</a></h2>
+<pre><code class="language-bash">cargo test
+</code></pre>
+<h2 id="ci-pipeline"><a class="header" href="#ci-pipeline">CI pipeline</a></h2>
+<p><code>.github/workflows/ci.yaml</code> runs on every PR and push to <code>main</code>:</p>
+<ol>
+<li><code>cargo fmt --check</code> – formatting</li>
+<li><code>cargo clippy --all-targets -D warnings</code> – linting</li>
+<li><code>cargo build --release</code> – release build</li>
+<li><code>cargo test</code> – unit tests</li>
+</ol>
+<p>Pushes to <code>main</code> also build and publish a Docker image to GHCR.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="crd-feature"><a class="header" href="#crd-feature">CRD Feature</a></h1>
+<p>The <code>crd</code> feature flag enables the Kubernetes CRD-based discovery controller.
+It is off by default to keep the base binary small.</p>
+<h2 id="building-with-crd-support"><a class="header" href="#building-with-crd-support">Building with CRD support</a></h2>
+<pre><code class="language-bash">cargo build --release --features crd
+</code></pre>
+<h2 id="how-it-works-1"><a class="header" href="#how-it-works-1">How it works</a></h2>
+<p>When enabled, the federation watches for <code>MCPServer</code> custom resources in the
+configured namespace (or cluster-wide if the namespace is empty). Each CR is
+translated into a leaf server entry in the federation registry.</p>
+<h2 id="crd-installation"><a class="header" href="#crd-installation">CRD installation</a></h2>
+<p>The CRD manifest ships with the Helm chart:</p>
+<pre><code class="language-bash">kubectl apply -f helm/mcp-federation/crds/mcpserver.yaml
+</code></pre>
+<h2 id="example-mcpserver-cr"><a class="header" href="#example-mcpserver-cr">Example MCPServer CR</a></h2>
+<pre><code class="language-yaml">apiVersion: federation.mcp.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: prod-k8s
+  namespace: mcp-system
+spec:
+  alias: prod-k8s
+  url: http://mcp-k8s.mcp-system.svc:8080/mcp
+  transport: http-post
+  tags:
+    - kubernetes
+    - production
+</code></pre>
+<h2 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h2>
+<p>Enable in the federation config:</p>
+<pre><code class="language-yaml">federation:
+  crd_discovery:
+    enabled: true
+    namespace: mcp-system     # empty = all namespaces
+</code></pre>
+<h2 id="rbac-requirements"><a class="header" href="#rbac-requirements">RBAC requirements</a></h2>
+<p>The federation’s <code>ServiceAccount</code> needs <code>get</code>, <code>list</code>, and <code>watch</code>
+permissions on <code>mcpservers.federation.mcp.io</code>. The default Helm chart does
+not ship this RBAC – add a <code>ClusterRole</code> / <code>RoleBinding</code> yourself.</p>
+<h2 id="alias-namespacing"><a class="header" href="#alias-namespacing">Alias namespacing</a></h2>
+<p>CRD-discovered aliases are prefixed with <code>crd-&lt;namespace&gt;-&lt;name&gt;</code> so they
+don’t collide with static or DNS-discovered leaves. CR deletion removes the
+leaf from the registry.</p>
+<p>If the CRD is not installed in the cluster, the controller logs a warning
+and exits cleanly – the rest of the federation keeps running.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/version-select-af16a745.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
